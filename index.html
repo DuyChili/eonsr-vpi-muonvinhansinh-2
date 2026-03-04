@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muôn Vị Nhân Sinh — VanPhu × Triển Lãm Đa Giác Quan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ─── RESET & TOKENS ───────────────────────────────── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink:     #2B1812;
+    --ink-mid: #3D2018;
+    --ember:   #E37C4D;
+    --ember-dim: rgba(227,124,77,0.4);
+    --ember-glow: rgba(227,124,77,0.15);
+    --sand:    #F5E6D3;
+    --sand-dim: rgba(245,230,211,0.55);
+    --sand-faint: rgba(245,230,211,0.12);
+    --white:   #FAF3EB;
+    --serif:   'Cormorant Garamond', Georgia, serif;
+    --display: 'Playfair Display', sans-serif;
+    --sans:    'Outfit', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--sand);
+    font-family: var(--serif);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── CUSTOM CURSOR ────────────────────────────────── */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--ember);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.3s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid var(--ember-dim);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* ─── NAVBAR ───────────────────────────────────────── */
+  #nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 1.8rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.5s ease, padding 0.4s ease;
+  }
+  #nav.scrolled {
+    background: rgba(43,24,18,0.92);
+    backdrop-filter: blur(16px);
+    padding: 1.2rem 4rem;
+    border-bottom: 1px solid rgba(227,124,77,0.1);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    letter-spacing: 0.25em;
+    color: var(--white);
+  }
+  .nav-logo span { color: var(--ember); }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sand-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--ember); }
+
+  /* ─── FADE-IN ON SCROLL ────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.d1 { transition-delay: 0.1s; }
+  .reveal.d2 { transition-delay: 0.2s; }
+  .reveal.d3 { transition-delay: 0.35s; }
+  .reveal.d4 { transition-delay: 0.5s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  I. HERO                                            */
+  /* ─────────────────────────────────────────────────── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Windows grid background */
+  .win-grid {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 3px;
+    padding: 3px;
+    opacity: 0;
+    animation: gridFadeIn 2.5s 0.3s ease forwards;
+  }
+  @keyframes gridFadeIn { to { opacity: 0.55; } }
+
+  .win {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink-mid);
+  }
+  /* Each window has a warm layer and a cool layer */
+  .win .wl {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 2.4s ease;
+  }
+  .win .wl-a { background: radial-gradient(ellipse at 50% 80%, #D4821A 0%, #6B2E08 60%, transparent 100%); }
+  .win .wl-b { background: radial-gradient(ellipse at 50% 80%, #E8B060 0%, #9A5A10 60%, transparent 100%); }
+  .win .wl-c { background: radial-gradient(ellipse at 50% 80%, #7A9AC0 0%, #2A4A7A 60%, transparent 100%); }
+  .win.lit-a .wl-a { opacity: 1; }
+  .win.lit-b .wl-b { opacity: 1; }
+  .win.lit-c .wl-c { opacity: 1; }
+
+  /* Hero gradient overlay: dark at edges, slightly lighter at centre */
+  .hero-veil {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 50%, rgba(43,24,18,0.15) 0%, rgba(43,24,18,0.82) 70%, rgba(43,24,18,0.97) 100%);
+  }
+
+  /* Cinematic letter-box bars */
+  .hero-veil::before, .hero-veil::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 90px;
+    background: var(--ink);
+  }
+  .hero-veil::before { top: 0; }
+  .hero-veil::after  { bottom: 0; }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    font-weight: 300;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s 1s ease forwards;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(5rem, 13vw, 13rem);
+    line-height: 0.9;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-shadow:
+      0 0 80px rgba(227,124,77,0.35),
+      0 0 160px rgba(227,124,77,0.18),
+      0 0 300px rgba(227,124,77,0.08);
+    opacity: 0;
+    animation: fadeUp 1.2s 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero-title span { display: block; }
+  .hero-title .accent {
+    color: var(--ember);
+    text-shadow:
+      0 0 60px rgba(227,124,77,0.6),
+      0 0 120px rgba(227,124,77,0.3);
+      font-style: italic;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--ember), transparent);
+    margin: 2.5rem auto;
+    opacity: 0;
+    animation: fadeIn 1s 2s ease forwards;
+  }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--sand-dim);
+    letter-spacing: 0.08em;
+    opacity: 0;
+    animation: fadeUp 1s 2.1s ease forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 3rem;
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.35);
+    opacity: 0;
+    animation: fadeIn 1s 2.6s ease forwards;
+  }
+  .hero-meta .sep {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--ember);
+    opacity: 0.6;
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 1s 3.2s ease forwards;
+  }
+  .hero-scroll-cue span {
+    font-family: var(--sans);
+    font-size: 0.55rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.3);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--ember-dim), transparent);
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+  @keyframes scrollDrop {
+    0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+    50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+    100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  II. PHILOSOPHY                                     */
+  /* ─────────────────────────────────────────────────── */
+  #philosophy {
+    padding: 10rem 4rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .philosophy-card {
+    max-width: 720px;
+    width: 100%;
+    border: 1px solid rgba(43,24,18,0.6);
+    background: var(--sand);
+    padding: 5rem 6rem;
+    text-align: center;
+    position: relative;
+  }
+
+  /* Corner ornaments */
+  .philosophy-card::before, .philosophy-card::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--ember);
+    border-style: solid;
+  }
+  .philosophy-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .philosophy-card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  .ph-ornament-tr, .ph-ornament-bl {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--ember);
+    border-style: solid;
+  }
+  .ph-ornament-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .ph-ornament-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+
+  .ph-tag {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 2.5rem;
+    display: block;
+  }
+
+  .ph-question {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--ink);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+  }
+
+  .ph-line {
+    width: 40px;
+    height: 1px;
+    background: var(--ember);
+    margin: 0 auto 2.5rem;
+  }
+
+  .ph-body {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: rgba(43,24,18,0.72);
+  }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  III. 5 ACTS — SPLIT SCREEN                         */
+  /* ─────────────────────────────────────────────────── */
+  #acts { padding: 6rem 0; }
+
+  .act {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 600px;
+    overflow: hidden;
+  }
+
+  /* Alternating: image-left or text-left */
+  .act:nth-child(even) .act-visual { order: 2; }
+  .act:nth-child(even) .act-text   { order: 1; }
+
+  .act-visual {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink-mid);
+  }
+
+  /* Film-frame corners */
+  .act-visual::before, .act-visual::after {
+    content: '';
+    position: absolute;
+    width: 30px; height: 30px;
+    border-color: rgba(227,124,77,0.5);
+    border-style: solid;
+    z-index: 3;
+  }
+  .act-visual::before { top: 24px; left: 24px; border-width: 2px 0 0 2px; }
+  .act-visual::after  { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; }
+
+  /* Gradient placeholder (replace with real photos) */
+  .act-visual-inner {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .act:hover .act-visual-inner { transform: scale(1.04); }
+
+  /* Pattern placeholders for each dome */
+  .dome-vis-1 {
+    background:
+      radial-gradient(ellipse 60% 70% at 30% 60%, #C8701A 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 75% 30%, #7A3A0A 0%, transparent 55%),
+      linear-gradient(160deg, #1A0A04 0%, #2D1408 100%);
+  }
+  .dome-vis-2 {
+    background:
+      radial-gradient(ellipse 70% 60% at 65% 40%, #4A3A28 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 70%, #E8A040 0%, transparent 50%),
+      linear-gradient(145deg, #0A0804 0%, #1E1208 100%);
+  }
+  .dome-vis-3 {
+    background:
+      radial-gradient(ellipse 60% 60% at 40% 40%, #2A3A5A 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 70%, #C87020 0%, transparent 50%),
+      linear-gradient(135deg, #080A14 0%, #1A100A 100%);
+  }
+  .dome-vis-4 {
+    background:
+      radial-gradient(ellipse 50% 60% at 60% 55%, #D4921A 0%, transparent 55%),
+      radial-gradient(ellipse 30% 30% at 20% 25%, #8A5A2A 0%, transparent 50%),
+      linear-gradient(150deg, #180C04 0%, #2A1808 100%);
+  }
+  .dome-vis-5 {
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, #3A8A50 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 25% 35%, #C87820 0%, transparent 50%),
+      linear-gradient(140deg, #060E08 0%, #180E04 100%);
+  }
+
+  /* Floating number on visual */
+  .act-visual-num {
+    position: absolute;
+    bottom: 2rem; left: 2.5rem;
+    font-family: var(--display);
+    font-size: 8rem;
+    line-height: 1;
+    color: rgba(227,124,77,0.08);
+    z-index: 2;
+    pointer-events: none;
+    letter-spacing: -0.02em;
+  }
+
+  /* Thin horizontal film-strip lines */
+  .act-visual-strip {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+      to right,
+      transparent 0px, transparent 18px,
+      rgba(227,124,77,0.2) 18px, rgba(227,124,77,0.2) 20px
+    );
+    z-index: 3;
+  }
+  .act-visual-strip.bot {
+    top: auto; bottom: 0;
+    transform: scaleX(-1);
+  }
+
+  .act-text {
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    padding: 5rem 5.5rem;
+    position: relative;
+  }
+
+  /* Subtle side border on text panels */
+  .act:nth-child(odd)  .act-text { border-left:  1px solid rgba(227,124,77,0.08); }
+  .act:nth-child(even) .act-text { border-right: 1px solid rgba(227,124,77,0.08); }
+
+  .act-text-inner { max-width: 420px; }
+
+  .act-roman {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .act-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    letter-spacing: 0.06em;
+    color: var(--white);
+    line-height: 1.05;
+    margin-bottom: 0.6rem;
+  }
+
+  .act-subtitle {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ember);
+    margin-bottom: 2rem;
+    display: block;
+    letter-spacing: 0.04em;
+  }
+
+  .act-divider {
+    width: 32px;
+    height: 1px;
+    background: var(--ember-dim);
+    margin-bottom: 2rem;
+  }
+
+  .act-body {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--sand-dim);
+  }
+
+  .act-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2.2rem;
+  }
+  .act-tag {
+    font-family: var(--sans);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    border: 1px solid rgba(227,124,77,0.3);
+    padding: 0.35rem 0.85rem;
+  }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  IV. GALLERY — ASYMMETRIC GRID                      */
+  /* ─────────────────────────────────────────────────── */
+  #gallery {
+    padding: 10rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gallery-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+  }
+
+  .gallery-header-left .section-tag {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--ember);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .section-tag::before {
+    content: '';
+    width: 36px; height: 1px;
+    background: var(--ember);
+  }
+
+  .gallery-title {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .gallery-credit {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--sand-dim);
+    text-align: right;
+  }
+  .gallery-credit strong { color: var(--ember); font-style: normal; font-weight: 400; }
+
+  /* Asymmetric 4-column grid */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1fr;
+    grid-template-rows: repeat(3, 240px);
+    gap: 4px;
+  }
+
+  .g-cell {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink-mid);
+    cursor: none;
+  }
+
+  /* Spanning rules for asymmetry */
+  .g-cell:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; }
+  .g-cell:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .g-cell:nth-child(3) { grid-column: 3; grid-row: 1 / span 2; }
+  .g-cell:nth-child(4) { grid-column: 4; grid-row: 1; }
+  .g-cell:nth-child(5) { grid-column: 2; grid-row: 2; }
+  .g-cell:nth-child(6) { grid-column: 4; grid-row: 2 / span 2; }
+  .g-cell:nth-child(7) { grid-column: 1 / span 2; grid-row: 3; }
+  .g-cell:nth-child(8) { grid-column: 3; grid-row: 3; }
+
+  /* Abstract photo stand-ins — painterly gradient compositions */
+  .g-cell:nth-child(1) .g-img { background: linear-gradient(160deg, #3A2010 20%, #0A0402 70%, #1A0C04 100%),
+    radial-gradient(ellipse 50% 60% at 40% 60%, rgba(200,110,30,0.4) 0%, transparent 70%); }
+  .g-cell:nth-child(2) .g-img { background: linear-gradient(135deg, #4A3020 0%, #0E0806 100%); }
+  .g-cell:nth-child(3) .g-img { background: linear-gradient(145deg, #1A1408 0%, #3A2A14 60%, #0A0602 100%); }
+  .g-cell:nth-child(4) .g-img { background: linear-gradient(160deg, #2A1A0C 0%, #080402 100%); }
+  .g-cell:nth-child(5) .g-img { background: linear-gradient(120deg, #0A0804 0%, #2A1E10 100%); }
+  .g-cell:nth-child(6) .g-img { background: linear-gradient(150deg, #3A2A18 0%, #0C0804 80%, #1A1008 100%); }
+  .g-cell:nth-child(7) .g-img { background: linear-gradient(135deg, #180E08 0%, #2E1E0E 50%, #0A0402 100%); }
+  .g-cell:nth-child(8) .g-img { background: linear-gradient(160deg, #1A0E06 0%, #3A2010 100%); }
+
+  .g-img {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  /* --- SỬA LỖI HIỂN THỊ ẢNH --- */
+.act-visual-inner img,
+.g-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Giúp ảnh phủ kín khung mà không bị méo */
+  display: block;
+}
+
+  /* Scatter warm light blobs on each */
+  .g-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 40% 50% at var(--lx, 30%) var(--ly, 60%), rgba(227,124,77,0.18) 0%, transparent 70%);
+  }
+
+  .g-cell:nth-child(1) .g-img::after { --lx: 35%; --ly: 65%; }
+  .g-cell:nth-child(2) .g-img::after { --lx: 65%; --ly: 35%; }
+  .g-cell:nth-child(3) .g-img::after { --lx: 45%; --ly: 55%; }
+  .g-cell:nth-child(4) .g-img::after { --lx: 30%; --ly: 70%; }
+  .g-cell:nth-child(5) .g-img::after { --lx: 70%; --ly: 40%; }
+  .g-cell:nth-child(6) .g-img::after { --lx: 50%; --ly: 50%; }
+  .g-cell:nth-child(7) .g-img::after { --lx: 25%; --ly: 60%; }
+  .g-cell:nth-child(8) .g-img::after { --lx: 60%; --ly: 40%; }
+
+  .g-cell:hover .g-img { transform: scale(1.06); }
+
+  /* Overlay on hover */
+  .g-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(43,24,18,0.7);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .g-cell:hover .g-overlay { opacity: 1; }
+
+  .g-overlay-text {
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--ember);
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+
+  /* Small photo number label */
+  .g-num {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    font-family: var(--sans);
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: rgba(245,230,211,0.2);
+    z-index: 3;
+  }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  V. INVITATION — REGISTER                           */
+  /* ─────────────────────────────────────────────────── */
+  #invite {
+    padding: 10rem 4rem 8rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Soft ambient glow behind */
+  #invite::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(227,124,77,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .invite-tag {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 2rem;
+    display: block;
+  }
+
+  .invite-title {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+  }
+  .invite-title .em { color: var(--ember); }
+
+  .invite-sub {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-style: italic;
+    color: var(--sand-dim);
+    margin-bottom: 4rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FORM ── */
+  .invite-form {
+    max-width: 560px;
+    margin: 0 auto 3.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    text-align: left;
+  }
+
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+  .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .form-label {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.35);
+  }
+  .req { color: var(--ember); }
+
+  .form-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(245,230,211,0.12);
+    color: var(--sand);
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    padding: 0.75rem 0;
+    outline: none;
+    transition: border-color 0.35s;
+    -webkit-appearance: none;
+    border-radius: 0;
+    width: 100%;
+    position: relative;
+  }
+  .form-input::placeholder { color: rgba(245,230,211,0.18); font-style: italic; }
+  .form-input:focus { border-bottom-color: var(--ember); }
+  .form-input.err { border-bottom-color: #C05050; }
+
+  .form-err {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    color: #C07070;
+    min-height: 0.8rem;
+    display: block;
+  }
+
+  /* Date selector */
+  .date-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .date-opt input { display: none; }
+  .date-btn {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.4);
+    border: 1px solid rgba(245,230,211,0.1);
+    padding: 0.5rem 1.1rem;
+    cursor: none;
+    transition: all 0.25s;
+    display: block;
+  }
+  .date-opt:hover .date-btn { border-color: var(--ember-dim); color: var(--sand-dim); }
+  .date-opt input:checked + .date-btn {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: var(--ink);
+  }
+
+  .form-note {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    color: rgba(245,230,211,0.2);
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+  }
+
+  /* Submit */
+  .invite-cta-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+
+  /* ── INVITE 2-COL LAYOUT ── */
+  .invite-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1160px;
+    margin: 0 auto;
+    border: 1px solid rgba(227,124,77,0.1);
+  }
+
+  .invite-left {
+    padding: 3.5rem 4rem;
+    border-right: 1px solid rgba(227,124,77,0.1);
+    position: relative;
+  }
+  .invite-left::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, var(--ember), transparent);
+  }
+  .invite-left .invite-form { max-width: 100%; margin: 0 0 2rem; }
+  .invite-left .invite-cta-wrap { align-items: flex-start; }
+
+  .invite-right { display: flex; flex-direction: column; }
+
+  /* Map */
+  .map-wrap { flex: 1; position: relative; overflow: hidden; min-height: 320px; }
+  .map-wrap iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+    filter: saturate(0.22) contrast(1.1) brightness(0.65) sepia(0.45);
+    transition: filter 0.5s ease;
+  }
+  .map-wrap:hover iframe { filter: saturate(0.55) contrast(1.05) brightness(0.9) sepia(0.18); }
+  .map-tint {
+    position: absolute; inset: 0;
+    background: rgba(43,24,18,0.28);
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+  }
+  .map-wrap:hover .map-tint { opacity: 0; }
+
+  .map-bar {
+    background: rgba(43,24,18,0.96);
+    border-bottom: 1px solid rgba(227,124,77,0.15);
+    padding: 0.7rem 1.4rem;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    position: relative; z-index: 2;
+  }
+  .map-bar-label {
+    font-family: var(--sans); font-size: 0.56rem;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ember);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .map-dir-link {
+    font-family: var(--sans); font-size: 0.52rem;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(245,230,211,0.28); text-decoration: none;
+    display: flex; align-items: center; gap: 0.35rem;
+    transition: color 0.3s;
+  }
+  .map-dir-link:hover { color: var(--ember); }
+
+  /* Info strip bottom */
+  .map-info-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(227,124,77,0.1);
+  }
+  .msi-item {
+    padding: 1.2rem 0.8rem;
+    border-right: 1px solid rgba(227,124,77,0.07);
+    text-align: center;
+  }
+  .msi-item:last-child { border-right: none; }
+  .msi-label {
+    font-family: var(--sans); font-size: 0.48rem;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(245,230,211,0.22); display: block; margin-bottom: 0.35rem;
+  }
+  .msi-val {
+    font-family: var(--serif); font-size: 0.82rem;
+    font-style: italic; color: rgba(245,230,211,0.5); display: block;
+  }
+  .msi-val.free {
+    font-family: var(--display); font-style: normal;
+    font-size: 0.95rem; letter-spacing: 0.1em; color: var(--ember);
+  }
+
+  .btn-register {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--sand);
+    border: 1px solid rgba(245,230,211,0.25);
+    padding: 1.2rem 3.5rem;
+    background: transparent;
+    cursor: none;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+  }
+  .btn-register::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ember);
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .btn-register:hover { color: var(--ink); border-color: var(--ember); }
+  .btn-register:hover::before { transform: none; }
+  .btn-register span { position: relative; z-index: 1; }
+  .btn-arrow { font-size: 1rem; transition: transform 0.3s; position: relative; z-index: 1; }
+  .btn-register:hover .btn-arrow { transform: translateX(4px); }
+
+  /* Success message */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 3rem;
+    border: 1px solid rgba(227,124,77,0.2);
+    background: rgba(227,124,77,0.04);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .success-msg.show { display: block; }
+  .success-glyph { font-size: 2rem; color: var(--ember); display: block; margin-bottom: 1.2rem; }
+  .success-head { font-family: var(--display); font-size: 2rem; letter-spacing: 0.06em; color: var(--white); margin-bottom: 0.8rem; }
+  .success-body { font-family: var(--serif); font-style: italic; color: var(--sand-dim); font-size: 1rem; line-height: 1.7; }
+  .success-body strong { color: var(--ember); font-style: normal; }
+
+  /* Event details strip */
+  .invite-details {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(245,230,211,0.06);
+  }
+  .id-item { text-align: center; }
+  .id-label {
+    font-family: var(--sans);
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.28);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .id-val {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--sand-dim);
+  }
+  .id-val.free { color: var(--ember); font-style: normal; font-family: var(--display); letter-spacing: 0.1em; font-size: 1.1rem; }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  FOOTER                                             */
+  /* ─────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid rgba(245,230,211,0.06);
+    padding: 3rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .foot-brand { font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.25em; color: rgba(245,230,211,0.2); }
+  .foot-brand span { color: rgba(227,124,77,0.4); }
+  .foot-copy { font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.2em; color: rgba(245,230,211,0.18); }
+  .foot-links { display: flex; gap: 2rem; }
+  .foot-links a { font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,230,211,0.2); text-decoration: none; transition: color 0.3s; }
+  .foot-links a:hover { color: var(--ember); }
+
+  /* ─────────────────────────────────────────────────── */
+  /*  RESPONSIVE                                         */
+  /* ─────────────────────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .act { grid-template-columns: 1fr; min-height: auto; }
+    .act:nth-child(even) .act-visual,
+    .act:nth-child(even) .act-text { order: unset; }
+    .act-visual { height: 360px; }
+    .act-text { padding: 3.5rem 2.5rem; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .g-cell:nth-child(n) { grid-column: auto; grid-row: auto; }
+    .g-cell { height: 200px; }
+    .invite-details { gap: 2rem; flex-wrap: wrap; }
+    .invite-layout { grid-template-columns: 1fr; }
+    .invite-left { border-right: none; border-bottom: 1px solid rgba(227,124,77,0.1); }
+    .map-info-strip { grid-template-columns: repeat(2, 1fr); }
+    .msi-item:nth-child(2) { border-right: none; }
+  }
+  @media (max-width: 768px) {
+    #nav { padding: 1.2rem 1.5rem; }
+    #nav.scrolled { padding: 0.9rem 1.5rem; }
+    #nav .nav-links { display: none; }
+    #philosophy { padding: 6rem 1.5rem; }
+    .philosophy-card { padding: 3rem 2rem; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .g-cell { height: 220px; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .foot-links { justify-content: center; }
+    #invite { padding: 6rem 1.5rem 5rem; }
+    .form-row-2 { grid-template-columns: 1fr; }
+    .invite-details { flex-direction: column; align-items: center; gap: 1.5rem; }
+    #gallery { padding: 6rem 1.5rem; }
+    .gallery-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo"><img src="assets/images/VPI_Logo.png" height="40px" alt=""></div>
+  <ul class="nav-links">
+    <li><a href="#philosophy">Triết Lý</a></li>
+    <li><a href="#acts">5 Dome</a></li>
+    <li><a href="#gallery">Triển Lãm</a></li>
+    <li><a href="#invite">Đăng Ký</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════ -->
+<!--  I. HERO                                 -->
+<!-- ════════════════════════════════════════ -->
+<section id="hero">
+  <div class="win-grid" id="winGrid"></div>
+  <div class="hero-veil"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">VanPhu × Triển Lãm Đa Giác Quan · Tháng 4 · 2026</p>
+    
+    <h1 class="hero-title">
+      <span class="accent">Muôn Vị</span>
+      <span >Nhân Sinh</span>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">"From The City's Beat — To Your Heart's Seat"</p>
+    <div class="hero-meta">
+      <span>Tòa Exhibition</span>
+      <span class="sep"></span>
+      <span>Công Viên 23 Tháng 9</span>
+      <span class="sep"></span>
+      <span>3 – 5 Tháng 4 · TP.HCM</span>
+      <span class="sep"></span>
+      <span>Miễn phí</span>
+    </div>
+  </div>
+
+  <div class="hero-scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Cuộn xuống</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!--  II. PHILOSOPHY                          -->
+<!-- ════════════════════════════════════════ -->
+<section id="philosophy">
+  <div class="philosophy-card reveal">
+    <div class="ph-ornament-tr"></div>
+    <div class="ph-ornament-bl"></div>
+    <span class="ph-tag">Triết Lý</span>
+    <p class="ph-question">
+      "Giữa đất chật người đông,<br>liệu bạn đã tìm thấy<br><em>Tổ Ấm của riêng mình?</em>"
+    </p>
+    <div class="ph-line"></div>
+    <p class="ph-body">
+      Một không gian trải nghiệm đa giác quan — nơi nhịp sống Sài Gòn gặp gỡ những tâm hồn vị nhân sinh. Tại đây, mỗi điểm chạm là một lát cắt cảm xúc, dẫn bạn đến những giá trị không đổi qua năm tháng. Văn Phú không "đo ni đóng giày" — Văn Phú muốn kiến tạo một Ngôi Nhà để bạn thuộc về.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!--  III. 5 ACTS                             -->
+<!-- ════════════════════════════════════════ -->
+<section id="acts">
+
+  <!-- DOME I -->
+  <div class="act">
+    <div class="act-visual">
+      <div class="act-visual-strip"></div>
+      <div class="act-visual-strip bot"></div>
+      <div class="act-visual-inner dome-vis-1"><img src="/assets/images/dome1.jpg" alt=""></div>
+      <div class="act-visual-num">I</div>
+    </div>
+    <div class="act-text">
+      <div class="act-text-inner reveal">
+        <span class="act-roman">Dome · I</span>
+        <h2 class="act-title">MỘT LỜI CHÀO — MUÔN SỰ ẤM</h2>
+        <span class="act-subtitle">One Greeting — Myriad Warmth</span>
+        <div class="act-divider"></div>
+        <p class="act-body">
+          Hành trình bắt đầu từ một lời chào. Mỗi vùng miền, mỗi nền văn hóa có cách chào hỏi riêng — nhưng tất cả đều chứa đựng cùng một nhiệt độ: sự ấm áp của con người với con người. Bạn sẽ nhận một "Resident Card" mang dấu ấn cá nhân để bắt đầu hành trình.
+        </p>
+        <div class="act-tags">
+          <span class="act-tag">Interactive Check-in</span>
+          <span class="act-tag">QR Ticket</span>
+          <span class="act-tag">Resident Card</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOME II -->
+  <div class="act">
+    <div class="act-visual">
+      <div class="act-visual-strip"></div>
+      <div class="act-visual-strip bot"></div>
+      <div class="act-visual-inner dome-vis-2" ><img src="/assets/images/dome2.jpg" alt=""></div>
+      <div class="act-visual-num">II</div>
+    </div>
+    <div class="act-text">
+      <div class="act-text-inner reveal">
+        <span class="act-roman">Dome · II</span>
+        <h2 class="act-title">MUÔN SẮC SÀI GÒN</h2>
+        <span class="act-subtitle">Myriad Colors of Saigon</span>
+        <div class="act-divider"></div>
+        <p class="act-body">
+          Triển lãm nhiếp ảnh đường phố của Kmon Nguyễn — Top 100 Street Photo 35Awards 2024. Những khoảnh khắc sống động nhất của Sài Gòn được đóng khung trong ánh sáng vàng, kể câu chuyện về một thành phố không bao giờ ngủ nhưng luôn ấm lòng.
+        </p>
+        <div class="act-tags">
+          <span class="act-tag">Photo Exhibition</span>
+          <span class="act-tag">Kmon Nguyễn</span>
+          <span class="act-tag">AR / VR</span>
+          <span class="act-tag">Street Performance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOME III -->
+  <div class="act">
+    <div class="act-visual">
+      <div class="act-visual-strip"></div>
+      <div class="act-visual-strip bot"></div>
+      <div class="act-visual-inner dome-vis-3"><img src="/assets/images/dome3.jpg" alt=""></div>
+      <div class="act-visual-num">III</div>
+    </div>
+    <div class="act-text">
+      <div class="act-text-inner reveal">
+        <span class="act-roman">Dome · III</span>
+        <h2 class="act-title">MUÔN HUE VĂN HÓA</h2>
+        <span class="act-subtitle">Myriad Cultural Hues</span>
+        <div class="act-divider"></div>
+        <p class="act-body">
+          Không gian 360° mapping tái hiện sự đa dạng văn hóa của Sài Gòn qua những khung cửa sổ — mỗi ô cửa là một vùng đất, một câu chuyện. Nghệ sĩ Cao Hoàng Long và Minh Hằng biến những bức tường thành ký ức sống động.
+        </p>
+        <div class="act-tags">
+          <span class="act-tag">360° Mapping</span>
+          <span class="act-tag">VR Art</span>
+          <span class="act-tag">Cao Hoàng Long</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOME IV -->
+  <div class="act">
+    <div class="act-visual">
+      <div class="act-visual-strip"></div>
+      <div class="act-visual-strip bot"></div>
+      <div class="act-visual-inner dome-vis-4"><img src="/assets/images/dome4.jpg" alt=""></div>
+      <div class="act-visual-num">IV</div>
+    </div>
+    <div class="act-text">
+      <div class="act-text-inner reveal">
+        <span class="act-roman">Dome · IV</span>
+        <h2 class="act-title">MUÔN VỊ GIẤC MƠ</h2>
+        <span class="act-subtitle">Myriad Dream Flavors</span>
+        <div class="act-divider"></div>
+        <p class="act-body">
+          Khu VIP lounge với dome mapping tương tác — nơi bạn hình dung căn nhà trong mơ của mình qua công nghệ và nghệ thuật. Signature cocktail, trưng bày nội thất cao cấp từ B+ Furniture, Hay Decor và ZERO Furniture. Dành riêng cho khách đã hoàn thành thử thách xã hội.
+        </p>
+        <div class="act-tags">
+          <span class="act-tag">VIP Lounge</span>
+          <span class="act-tag">Dream Visualization</span>
+          <span class="act-tag">Luxury Furniture</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOME V -->
+  <div class="act">
+    <div class="act-visual">
+      <div class="act-visual-strip"></div>
+      <div class="act-visual-strip bot"></div>
+      <div class="act-visual-inner dome-vis-5"><img src="/assets/images/dome5.jpg" alt=""></div>
+      <div class="act-visual-num">V</div>
+    </div>
+    <div class="act-text">
+      <div class="act-text-inner reveal">
+        <span class="act-roman">Dome · V</span>
+        <h2 class="act-title">MUÔN NIỀM VUI NHỎ</h2>
+        <span class="act-subtitle">Myriad Small Joys</span>
+        <div class="act-divider"></div>
+        <p class="act-body">
+          Workshop làm terrarium — mang một mảnh thiên nhiên về nhà. Merchandise độc quyền của triển lãm. Talkshow Homentor về hành trình tìm kiếm tổ ấm. Và mỗi buổi tối, âm nhạc acoustic từ Phan Mạnh Quỳnh, Vũ Cát Tường, Hoàng Dũng và Paradox sẽ khép lại ngày dài bằng những giai điệu ấm lòng.
+        </p>
+        <div class="act-tags">
+          <span class="act-tag">Terrarium Workshop</span>
+          <span class="act-tag">Acoustic Concert</span>
+          <span class="act-tag">Merchandise</span>
+          <span class="act-tag">Homentor Talk</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!--  IV. GALLERY                             -->
+<!-- ════════════════════════════════════════ -->
+<section id="gallery">
+  <div class="gallery-header reveal">
+    <div class="gallery-header-left">
+      <span class="section-tag">Triển Lãm Ảnh</span>
+      <h2 class="gallery-title">KMON<br>NGUYỄN</h2>
+    </div>
+    <p class="gallery-credit">
+      Nhiếp ảnh gia đường phố<br>
+      <strong>Top 100 · 35Awards 2024</strong><br>
+      <span style="font-size:0.85rem; opacity:0.6">Giải Nhất 35Awards 2022</span>
+    </p>
+  </div>
+
+  <div class="gallery-grid reveal d1">
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g1.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Sài Gòn lúc hoàng hôn<br><em>Quận 1, 2024</em></p></div>
+      <span class="g-num">01</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g2.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Góc phố nhỏ<br><em>Bình Thạnh, 2024</em></p></div>
+      <span class="g-num">02</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g3.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Ánh đèn về đêm<br><em>Chợ Lớn, 2023</em></p></div>
+      <span class="g-num">03</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g4.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Mưa chiều<br><em>Quận 3, 2024</em></p></div>
+      <span class="g-num">04</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g5.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Cửa sổ<br><em>Tân Định, 2023</em></p></div>
+      <span class="g-num">05</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g6.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Về nhà<br><em>Bình Dương, 2024</em></p></div>
+      <span class="g-num">06</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g7.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Sài Gòn không ngủ<br><em>Phố đi bộ, 2024</em></p></div>
+      <span class="g-num">07</span>
+    </div>
+    <div class="g-cell">
+      <div class="g-img"><img src="assets/images/g8.jpg" alt=""></div>
+      <div class="g-overlay"><p class="g-overlay-text">Tổ ấm<br><em>Quận 7, 2023</em></p></div>
+      <span class="g-num">08</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!--  V. INVITATION                           -->
+<!-- ════════════════════════════════════════ -->
+<section id="invite">
+  <span class="invite-tag reveal">Lời Mời</span>
+  <h2 class="invite-title reveal d1">
+    ĐẶT CHỖ<br>CHO <span class="em">TỔ ẤM</span>
+  </h2>
+  <p class="invite-sub reveal d2">Mỗi vé là một ô cửa mở ra — hoàn toàn miễn phí</p>
+
+  <!-- 2-COL LAYOUT -->
+  <div class="invite-layout reveal d2">
+
+    <!-- LEFT: FORM -->
+    <div class="invite-left">
+      <div class="invite-form" id="regForm">
+        <div class="form-field">
+          <label class="form-label" for="f-name">Họ và Tên <span class="req">*</span></label>
+          <input type="text" id="f-name" class="form-input" placeholder="Nguyễn Văn A" autocomplete="name">
+          <span class="form-err" id="e-name"></span>
+        </div>
+        <div class="form-row-2">
+          <div class="form-field">
+            <label class="form-label" for="f-phone">Số Điện Thoại <span class="req">*</span></label>
+            <input type="tel" id="f-phone" class="form-input" placeholder="0901 234 567" autocomplete="tel">
+            <span class="form-err" id="e-phone"></span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="f-email">Email <span class="req">*</span></label>
+            <input type="email" id="f-email" class="form-input" placeholder="email@example.com" autocomplete="email">
+            <span class="form-err" id="e-email"></span>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Ngày Tham Dự <span class="req">*</span></label>
+          <div class="date-row">
+            <label class="date-opt"><input type="radio" name="date" value="3/4"><span class="date-btn">3.4 · Thứ Sáu</span></label>
+            <label class="date-opt"><input type="radio" name="date" value="4/4"><span class="date-btn">4.4 · Thứ Bảy</span></label>
+            <label class="date-opt"><input type="radio" name="date" value="5/4"><span class="date-btn">5.4 · Chủ Nhật</span></label>
+          </div>
+          <span class="form-err" id="e-date"></span>
+        </div>
+        <p class="form-note">Vé vào cổng miễn phí · Mỗi vé gồm 1 người lớn + 1 trẻ em dưới 1m</p>
+      </div>
+
+      <div class="invite-cta-wrap">
+        <button class="btn-register" id="regBtn" onclick="submitReg(event)">
+          <span>Đăng Ký Ngay</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-msg" id="successBox">
+        <span class="success-glyph">✦</span>
+        <h3 class="success-head">ĐĂNG KÝ THÀNH CÔNG</h3>
+        <p class="success-body">
+          Cảm ơn <strong id="s-name"></strong>! Vui lòng kiểm tra email <strong id="s-email"></strong> để nhận mã QR check-in. Hẹn gặp bạn tại Công Viên 23 Tháng 9, ngày <strong id="s-date"></strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT: MAP -->
+    <div class="invite-right">
+      <div class="map-bar">
+        <span class="map-bar-label">
+          <span>⌖</span>
+          Công Viên 23 Tháng 9 · Quận 1 · TP.HCM
+        </span>
+        <a href="https://maps.google.com/?q=Công+Viên+23+Tháng+9,+Quận+1,+TP.HCM"
+           target="_blank" rel="noopener" class="map-dir-link">
+          Chỉ đường ↗
+        </a>
+      </div>
+
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6607348888784!2d106.69495917465626!3d10.771530589381528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4002cdb24b%3A0xd8e37b8a68a4af67!2zQ8O0bmcgdmnDqm4gMjMgdGjDoW5nIDks4bqgUGjhuqFtIE5nxakgTGHCtyBUUC4gSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2svn!4v1709550000000!5m2!1svi!2svn"
+          title="Bản đồ Công Viên 23 Tháng 9"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="map-tint"></div>
+      </div>
+
+      <div class="map-info-strip">
+        <div class="msi-item">
+          <span class="msi-label">Thời Gian</span>
+          <span class="msi-val">3–5 Tháng 4</span>
+        </div>
+        <div class="msi-item">
+          <span class="msi-label">Giờ Mở Cửa</span>
+          <span class="msi-val">9:00 – 21:00</span>
+        </div>
+        <div class="msi-item">
+          <span class="msi-label">Khu Vực</span>
+          <span class="msi-val">Quận 1 · HCM</span>
+        </div>
+        <div class="msi-item">
+          <span class="msi-label">Vé Vào Cửa</span>
+          <span class="msi-val free">MIỄN PHÍ</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end invite-layout -->
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-brand"><img src="assets/images/VPI_Logo.png" height="40px" alt=""></div>
+  <p class="foot-copy">© 2026 Văn Phú – Invest. Bảo lưu mọi quyền.</p>
+  <nav class="foot-links">
+    <a href="#philosophy">Triết Lý</a>
+    <a href="#acts">5 Dome</a>
+    <a href="#gallery">Triển Lãm</a>
+    <a href="#invite">Đăng Ký</a>
+  </nav>
+</footer>
+
+<script>
+  // ── CURSOR ──────────────────────────────────────────
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function animCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    cur.style.left  = mx + 'px';
+    cur.style.top   = my + 'px';
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animCursor);
+  })();
+  document.querySelectorAll('a, button, .g-cell, .date-opt').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cur.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      ring.style.transform = 'translate(-50%,-50%) scale(0.5)';
+      ring.style.opacity = '0.4';
+    });
+    el.addEventListener('mouseleave', () => {
+      cur.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.opacity = '1';
+    });
+  });
+
+  // ── WINDOWS GRID ────────────────────────────────────
+  (function() {
+    const grid = document.getElementById('winGrid');
+    const states = ['', 'lit-a', 'lit-b', 'lit-c', '', 'lit-a', '', 'lit-b', ''];
+    for (let i = 0; i < 48; i++) {
+      const w = document.createElement('div');
+      w.className = 'win ' + states[Math.floor(Math.random() * states.length)];
+      ['wl wl-a', 'wl wl-b', 'wl wl-c'].forEach(cls => {
+        const l = document.createElement('span');
+        l.className = cls;
+        w.appendChild(l);
+      });
+      grid.appendChild(w);
+    }
+    const wins = grid.querySelectorAll('.win');
+    setInterval(() => {
+      const idx = Math.floor(Math.random() * wins.length);
+      wins[idx].className = 'win ' + states[Math.floor(Math.random() * states.length)];
+    }, 700);
+  })();
+
+  // ── NAVBAR ──────────────────────────────────────────
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+  // ── SCROLL REVEAL ───────────────────────────────────
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── SMOOTH ANCHOR ───────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
+    });
+  });
+
+  // ── FORM SUBMIT ─────────────────────────────────────
+  function validate(id, errId, fn, msg) {
+    const el = document.getElementById(id);
+    const ok = fn(el.value.trim());
+    document.getElementById(errId).textContent = ok ? '' : msg;
+    el.classList.toggle('err', !ok);
+    return ok;
+  }
+
+  function submitReg(e) {
+    e.preventDefault();
+    const n  = validate('f-name',  'e-name',  v => v.length >= 2, 'Vui lòng nhập họ và tên.');
+    const p  = validate('f-phone', 'e-phone', v => /^(\+84|0)[3-9]\d{8}$/.test(v.replace(/\s/g,'')), 'Số điện thoại không hợp lệ.');
+    const em = validate('f-email', 'e-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Email không hợp lệ.');
+    const dateVal = [...document.querySelectorAll('input[name="date"]')].find(r => r.checked)?.value;
+    const dateEr  = document.getElementById('e-date');
+    dateEr.textContent = dateVal ? '' : 'Vui lòng chọn ngày tham dự.';
+    if (!n || !p || !em || !dateVal) return;
+
+    const btn = document.getElementById('regBtn');
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      document.getElementById('s-name').textContent  = document.getElementById('f-name').value.trim();
+      document.getElementById('s-email').textContent = document.getElementById('f-email').value.trim();
+      document.getElementById('s-date').textContent  = dateVal + '/4/2026';
+      document.getElementById('regForm').style.display  = 'none';
+      document.getElementById('regBtn').style.display   = 'none';
+      document.getElementById('successBox').classList.add('show');
+    }, 1400);
+  }
+
+  // Clear errors on input
+  document.querySelectorAll('.form-input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      inp.classList.remove('err');
+      const eId = 'e-' + inp.id.split('-')[1];
+      const e = document.getElementById(eId);
+      if (e) e.textContent = '';
+    });
+  });
+</script>
+</body>
+</html>
