@@ -6,6 +6,7 @@
 <title>Muôn Vị Nhân Sinh — VanPhu × Triển Lãm Đa Giác Quan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -521,7 +522,7 @@
     font-size: clamp(2rem, 3.5vw, 3.2rem);
     letter-spacing: 0.06em;
     color: var(--white);
-    line-height: 1.05;
+    line-height: 1.15;
     margin-bottom: 0.6rem;
   }
 
@@ -604,7 +605,7 @@
     font-size: clamp(2.5rem, 5vw, 5rem);
     letter-spacing: 0.04em;
     color: var(--white);
-    line-height: 1;
+    line-height: 1.15;
   }
 
   .gallery-credit {
@@ -757,7 +758,7 @@
     font-size: clamp(3.5rem, 8vw, 8rem);
     letter-spacing: 0.04em;
     color: var(--white);
-    line-height: 0.95;
+    line-height: 1.15;
     margin-bottom: 1.5rem;
   }
   .invite-title .em { color: var(--ember); }
@@ -1029,18 +1030,62 @@
   /*  FOOTER                                             */
   /* ─────────────────────────────────────────────────── */
   footer {
-    border-top: 1px solid rgba(245,230,211,0.06);
-    padding: 3rem 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .foot-brand { font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.25em; color: rgba(245,230,211,0.2); }
-  .foot-brand span { color: rgba(227,124,77,0.4); }
-  .foot-copy { font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.2em; color: rgba(245,230,211,0.18); }
-  .foot-links { display: flex; gap: 2rem; }
-  .foot-links a { font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,230,211,0.2); text-decoration: none; transition: color 0.3s; }
-  .foot-links a:hover { color: var(--ember); }
+  padding: 6rem 4rem 3rem !important; /* Tăng padding để sang trọng hơn */
+  display: block !important; /* Chuyển từ flex sang block để chứa grid */
+}
+
+.footer-grid-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem;
+}
+
+.foot-h4 {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ember);
+  margin-bottom: 1.8rem;
+}
+
+.foot-ul {
+  list-style: none;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--sand-dim);
+  line-height: 2;
+}
+
+.foot-ul a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.foot-ul a:hover {
+  color: var(--ember);
+}
+
+.social-links i {
+  width: 20px;
+  color: var(--ember-dim);
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover i {
+  color: var(--ember);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+  .footer-grid-main { grid-template-columns: 1fr 1fr; }
+  footer { padding: 4rem 1.5rem 2rem !important; }
+}
+
+@media (max-width: 768px) {
+  .footer-grid-main { grid-template-columns: 1fr; gap: 2.5rem; }
+}
 
   /* ─────────────────────────────────────────────────── */
   /*  RESPONSIVE                                         */
@@ -1188,7 +1233,7 @@
     <div class="act-text">
       <div class="act-text-inner reveal">
         <span class="act-roman">Dome · II</span>
-        <h2 class="act-title">Muôn sắc Sài Gòn</h2>
+        <h2 class="act-title">Muôn sắc <br>Sài Gòn</h2>
         <span class="act-subtitle">Myriad Colors of Saigon</span>
         <div class="act-divider"></div>
         <p class="act-body">
@@ -1215,7 +1260,7 @@
     <div class="act-text">
       <div class="act-text-inner reveal">
         <span class="act-roman">Dome · III</span>
-        <h2 class="act-title">Muôn màu văn hóa</h2>
+        <h2 class="act-title">Muôn màu <br>văn hóa</h2>
         <span class="act-subtitle">Myriad Cultural Hues</span>
         <div class="act-divider"></div>
         <p class="act-body">
@@ -1241,7 +1286,7 @@
     <div class="act-text">
       <div class="act-text-inner reveal">
         <span class="act-roman">Dome · IV</span>
-        <h2 class="act-title">Muôn vị giấc mơ</h2>
+        <h2 class="act-title">Muôn vị <br>giấc mơ</h2>
         <span class="act-subtitle">Myriad Dream Flavors</span>
         <div class="act-divider"></div>
         <p class="act-body">
@@ -1267,7 +1312,7 @@
     <div class="act-text">
       <div class="act-text-inner reveal">
         <span class="act-roman">Dome · V</span>
-        <h2 class="act-title">Muôn niềm vui nhỏ</h2>
+        <h2 class="act-title">Muôn niềm <br>vui nhỏ</h2>
         <span class="act-subtitle">Myriad Small Joys</span>
         <div class="act-divider"></div>
         <p class="act-body">
@@ -1456,14 +1501,53 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="foot-brand"><img src="assets/images/VPI_Logo.png" height="40px" alt=""></div>
-  <p class="foot-copy">© 2026 Văn Phú – Invest. Bảo lưu mọi quyền.</p>
-  <nav class="foot-links">
-    <a href="#philosophy">Triết Lý</a>
-    <a href="#acts">5 Dome</a>
-    <a href="#gallery">Triển Lãm</a>
-    <a href="#invite">Đăng Ký</a>
-  </nav>
+  <div class="container" style="width: 100%;">
+    <div style="margin-bottom: 4rem;">
+      <div class="foot-brand" style="margin-bottom: 1.5rem; opacity: 1;">
+        <img src="assets/images/VPI_Logo.png" height="40px" alt="VANPHU Logo">
+      </div>
+      <p style="font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--sand-dim); max-width: 800px; line-height: 1.7;">
+        Thành lập từ năm 2003, Công ty Cổ phần Phát triển Bất động sản Văn Phú không chỉ là nhà đầu tư mà còn thể hiện vai trò trong toàn bộ quá trình thực hiện dự án: từ nghiên cứu, thiết kế đến vận hành. Với tầm nhìn Vị nhân sinh, Văn Phú từng bước khẳng định vị thế trong lĩnh vực bất động sản tại Việt Nam.
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid rgba(227,124,77,0.1); margin-bottom: 3rem;">
+
+    <div class="footer-grid-main">
+      <div class="foot-col">
+        <h4 class="foot-h4">Liên hệ</h4>
+        <ul class="foot-ul">
+          <li>Địa chỉ: 104 phố Thái Thịnh, Phường Trung Liệt, Quận Đống Đa, Hà Nội, Việt Nam</li>
+          <li>Hotline: (+84) 24 6258 3535</li>
+          <li>Fax: (+84) 24 6258 3636</li>
+          <li>Email: info@vanphu.vn</li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4 class="foot-h4">Khám phá</h4>
+        <ul class="foot-ul">
+          <li><a href="#philosophy">Thông tin Văn Phú</a></li>
+          <li><a href="#acts">Dự án</a></li>
+          <li><a href="#">Quan hệ cổ đông</a></li>
+          <li><a href="#invite">Liên hệ</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4 class="foot-h4">Kết nối</h4>
+        <ul class="foot-ul social-links">
+          <li><a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a></li>
+          <li><a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a></li>
+          <li><a href="#"><i class="fa-brands fa-youtube"></i> Youtube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(245,230,211,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <p class="foot-copy">© Copyright 2025 by Van Phu. All rights reserved.</p>
+    </div>
+  </div>
 </footer>
 
 <script>
