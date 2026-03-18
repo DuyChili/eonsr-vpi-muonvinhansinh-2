@@ -3,1663 +3,2327 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muôn Vị Nhân Sinh — VanPhu × Triển Lãm Đa Giác Quan</title>
+<title>Triển Lãm Muôn Vị Nhân Sinh – VanPhu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-  /* ─── RESET & TOKENS ───────────────────────────────── */
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --ink:     #2B1812;
-    --ink-mid: #3D2018;
-    --ember:   #E37C4D;
-    --ember-dim: rgba(227,124,77,0.4);
-    --ember-glow: rgba(227,124,77,0.15);
-    --sand:    #F5E6D3;
-    --sand-dim: rgba(245,230,211,0.55);
-    --sand-faint: rgba(245,230,211,0.12);
-    --white:   #FAF3EB;
-    --serif:   'Cormorant Garamond', Georgia, serif;
-    --display: 'Playfair Display', sans-serif;
-    --sans:    'Outfit', sans-serif;
+    --amber: #E37C4D;
+    --amber-light: #F0A07A;
+    --amber-dark: #C05A2A;
+    --brown-deep: #2B1812;
+    --brown-mid: #4A2E1E;
+    --brown-light: #7A4A30;
+    --cream: #F5E6D3;
+    --cream-dark: #E8D0B5;
+    --gold: #C9983A;
   }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--ink);
-    color: var(--sand);
-    font-family: var(--serif);
+    background-color: var(--brown-deep);
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
-    cursor: none;
   }
 
-  /* ─── CUSTOM CURSOR ────────────────────────────────── */
-  .cursor {
-    position: fixed;
-    width: 8px; height: 8px;
-    background: var(--ember);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.15s ease, opacity 0.3s;
-    transform: translate(-50%, -50%);
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 32px; height: 32px;
-    border: 1px solid var(--ember-dim);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s;
-    transform: translate(-50%, -50%);
-  }
-
-  /* ─── NOISE TEXTURE OVERLAY ────────────────────────── */
+  /* Grain overlay */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
-    z-index: 1000;
-    opacity: 0.6;
+    z-index: 9999;
+    opacity: 0.4;
   }
 
-  /* ─── NAVBAR ───────────────────────────────────────── */
-  #nav {
+  /* Typography */
+  .font-display { font-family: 'Playfair Display', serif; }
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+
+  /* ===== NAVBAR ===== */
+  nav {
     position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 500;
-    padding: 1.8rem 4rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background 0.5s ease, padding 0.4s ease;
+    background: linear-gradient(to bottom, rgba(43,24,18,0.9), transparent);
+    backdrop-filter: blur(0px);
+    transition: all 0.4s ease;
   }
-  #nav.scrolled {
-    background: rgba(43,24,18,0.92);
-    backdrop-filter: blur(16px);
-    padding: 1.2rem 4rem;
-    border-bottom: 1px solid rgba(227,124,77,0.1);
+  nav.scrolled {
+    background: rgba(43,24,18,0.95);
+    backdrop-filter: blur(12px);
+    padding: 1rem 3rem;
+    border-bottom: 1px solid rgba(227,124,77,0.2);
   }
   .nav-logo {
-    font-family: var(--display);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
     font-size: 1.4rem;
-    letter-spacing: 0.25em;
-    color: var(--white);
-  }
-  .nav-logo span { color: var(--ember); }
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-family: var(--sans);
-    font-size: 0.62rem;
-    font-weight: 300;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.15em;
+    color: var(--amber);
     text-transform: uppercase;
-    color: var(--sand-dim);
+  }
+  .nav-logo span { color: var(--cream); }
+  .nav-links a {
+    color: var(--cream-dark);
     text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: 2.5rem;
     transition: color 0.3s;
+    font-weight: 300;
   }
-  .nav-links a:hover { color: var(--ember); }
+  .nav-links a:hover { color: var(--amber); }
 
-  /* ─── FADE-IN ON SCROLL ────────────────────────────── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
-  }
-  .reveal.d1 { transition-delay: 0.1s; }
-  .reveal.d2 { transition-delay: 0.2s; }
-  .reveal.d3 { transition-delay: 0.35s; }
-  .reveal.d4 { transition-delay: 0.5s; }
-  .reveal.visible { opacity: 1; transform: none; }
-
-  /* ─────────────────────────────────────────────────── */
-  /*  I. HERO                                            */
-  /* ─────────────────────────────────────────────────── */
+  /* ===== HERO ===== */
   #hero {
     position: relative;
     height: 100vh;
     min-height: 700px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
   }
 
-  /* Windows grid background */
-  .win-grid {
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--brown-deep);
+    overflow: hidden;
+  }
+
+  /* Simulated city windows */
+  .windows-grid {
     position: absolute;
     inset: 0;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    gap: 3px;
-    padding: 3px;
-    opacity: 0;
-    animation: gridFadeIn 2.5s 0.3s ease forwards;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 4px;
+    opacity: 0.5;
   }
-  @keyframes gridFadeIn { to { opacity: 0.55; } }
 
-  .win {
+  .window-cell {
+    background: var(--brown-deep);
+    border: 1px solid rgba(74,46,30,0.3);
     position: relative;
     overflow: hidden;
-    background: var(--ink-mid);
   }
-  /* Each window has a warm layer and a cool layer */
-  .win .wl {
+
+  /* Stacked colour layers – fade in/out via opacity so transition is always smooth */
+  .window-cell .wl {
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity 2.4s ease;
+    transition: opacity 1.8s ease;
+    pointer-events: none;
   }
-  .win .wl-a { background: radial-gradient(ellipse at 50% 80%, #D4821A 0%, #6B2E08 60%, transparent 100%); }
-  .win .wl-b { background: radial-gradient(ellipse at 50% 80%, #E8B060 0%, #9A5A10 60%, transparent 100%); }
-  .win .wl-c { background: radial-gradient(ellipse at 50% 80%, #7A9AC0 0%, #2A4A7A 60%, transparent 100%); }
-  .win.lit-a .wl-a { opacity: 1; }
-  .win.lit-b .wl-b { opacity: 1; }
-  .win.lit-c .wl-c { opacity: 1; }
+  .window-cell .wl-warm  { background: linear-gradient(135deg, #D4821A 0%, #8B4513 50%, #5C2E0A 100%); }
+  .window-cell .wl-hot   { background: linear-gradient(135deg, #E8A04A 0%, #C0681A 60%, #7A3A10 100%); }
+  .window-cell .wl-cool  { background: linear-gradient(135deg, #6B8BB5 0%, #3A5C8A 60%, #1A2E4A 100%); }
 
-  /* Hero gradient overlay: dark at edges, slightly lighter at centre */
-  .hero-veil {
+  .window-cell.lit      .wl-warm { opacity: 1; }
+  .window-cell.lit-warm .wl-hot  { opacity: 1; }
+  .window-cell.lit-cool .wl-cool { opacity: 1; }
+
+  .hero-overlay {
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse 60% 55% at 50% 50%, rgba(43,24,18,0.15) 0%, rgba(43,24,18,0.82) 70%, rgba(43,24,18,0.97) 100%);
+    background: radial-gradient(ellipse at center, rgba(43,24,18,0.3) 0%, rgba(43,24,18,0.85) 70%, rgba(43,24,18,0.97) 100%);
   }
-
-  /* Cinematic letter-box bars */
-  .hero-veil::before, .hero-veil::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0;
-    height: 90px;
-    background: var(--ink);
-  }
-  .hero-veil::before { top: 0; }
-  .hero-veil::after  { bottom: 0; }
 
   .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 10;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 2rem;
+    animation: heroFadeIn 1.8s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes heroFadeIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   .hero-eyebrow {
-    font-family: var(--sans);
-    font-size: 0.62rem;
-    font-weight: 300;
-    letter-spacing: 0.45em;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 2rem;
+    color: var(--amber);
+    margin-bottom: 1.5rem;
+    animation: heroFadeIn 1.8s 0.3s ease forwards;
     opacity: 0;
-    animation: fadeUp 1s 1s ease forwards;
   }
 
   .hero-title {
-    font-family: var(--display);
-    font-size: clamp(5rem, 13vw, 13rem);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 900;
     line-height: 0.9;
-    letter-spacing: 0.06em;
-    color: var(--white);
-    text-shadow:
-      0 0 80px rgba(227,124,77,0.35),
-      0 0 160px rgba(227,124,77,0.18),
-      0 0 300px rgba(227,124,77,0.08);
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    animation: heroFadeIn 1.8s 0.5s ease forwards;
     opacity: 0;
-    animation: fadeUp 1.2s 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  .hero-title span { display: block; }
-  .hero-title .accent {
-    color: var(--ember);
-    text-shadow:
-      0 0 60px rgba(227,124,77,0.6),
-      0 0 120px rgba(227,124,77,0.3);
-      font-style: italic;
   }
 
-  .hero-divider {
-    width: 60px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--ember), transparent);
-    margin: 2.5rem auto;
-    opacity: 0;
-    animation: fadeIn 1s 2s ease forwards;
-  }
+  .hero-title .accent { color: var(--amber); font-style: italic; }
 
-  .hero-sub {
-    font-family: var(--serif);
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    font-style: italic;
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
     font-weight: 300;
-    color: var(--sand-dim);
-    letter-spacing: 0.08em;
+    font-style: italic;
+    color: var(--cream-dark);
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+    animation: heroFadeIn 1.8s 0.7s ease forwards;
     opacity: 0;
-    animation: fadeUp 1s 2.1s ease forwards;
   }
 
   .hero-meta {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
-    margin-top: 3rem;
-    font-family: var(--sans);
-    font-size: 0.6rem;
-    font-weight: 300;
-    letter-spacing: 0.35em;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(245,230,211,0.35);
+    color: var(--amber-light);
+    animation: heroFadeIn 1.8s 0.9s ease forwards;
     opacity: 0;
-    animation: fadeIn 1s 2.6s ease forwards;
-  }
-  .hero-meta .sep {
-    width: 3px; height: 3px;
-    border-radius: 50%;
-    background: var(--ember);
-    opacity: 0.6;
   }
 
-  .hero-scroll-cue {
+  .hero-meta .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--amber); }
+
+  .hero-cta {
+    margin-top: 3rem;
+    animation: heroFadeIn 1.8s 1.1s ease forwards;
+    opacity: 0;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: var(--amber);
+    color: var(--brown-deep);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
     position: absolute;
-    bottom: 100px;
+    inset: 0;
+    background: var(--cream);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-primary:hover { color: var(--brown-deep); }
+
+  .btn-outline {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+  }
+  .btn-outline:hover { background: rgba(227,124,77,0.1); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    opacity: 0;
-    animation: fadeIn 1s 3.2s ease forwards;
-  }
-  .hero-scroll-cue span {
-    font-family: var(--sans);
-    font-size: 0.55rem;
-    letter-spacing: 0.4em;
+    gap: 0.75rem;
+    color: var(--amber-light);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: rgba(245,230,211,0.3);
+    animation: heroFadeIn 2s 1.5s ease forwards;
+    opacity: 0;
   }
+
   .scroll-line {
     width: 1px;
-    height: 48px;
-    background: linear-gradient(to bottom, var(--ember-dim), transparent);
-    animation: scrollDrop 2s ease-in-out infinite;
-  }
-  @keyframes scrollDrop {
-    0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
-    50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-    51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
-    100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    height: 50px;
+    background: linear-gradient(to bottom, var(--amber), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
   }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: none; }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; } to { opacity: 1; }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.4; transform: scaleY(0.6); }
   }
 
-  /* ─────────────────────────────────────────────────── */
-  /*  II. PHILOSOPHY                                     */
-  /* ─────────────────────────────────────────────────── */
-  #philosophy {
-    padding: 10rem 4rem;
-    display: flex;
-    justify-content: center;
-  }
+  /* ===== SECTIONS ===== */
+  section { padding: 8rem 0; }
 
-  .philosophy-card {
-    max-width: 720px;
-    width: 100%;
-    border: 1px solid rgba(43,24,18,0.6);
-    background: var(--sand);
-    padding: 5rem 6rem;
-    text-align: center;
-    position: relative;
-  }
-
-  /* Corner ornaments */
-  .philosophy-card::before, .philosophy-card::after {
-    content: '';
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--ember);
-    border-style: solid;
-  }
-  .philosophy-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-  .philosophy-card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-  .ph-ornament-tr, .ph-ornament-bl {
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--ember);
-    border-style: solid;
-  }
-  .ph-ornament-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-  .ph-ornament-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-
-  .ph-tag {
-    font-family: var(--sans);
-    font-size: 0.58rem;
-    letter-spacing: 0.45em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 2.5rem;
-    display: block;
-  }
-
-  .ph-question {
-    font-family: var(--serif);
-    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-    font-weight: 300;
-    line-height: 1.45;
-    color: var(--ink);
-    font-style: italic;
-    margin-bottom: 2.5rem;
-  }
-
-  .ph-line {
-    width: 40px;
-    height: 1px;
-    background: var(--ember);
-    margin: 0 auto 2.5rem;
-  }
-
-  .ph-body {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 300;
-    line-height: 1.85;
-    color: rgba(43,24,18,0.72);
-  }
-
-  /* ─────────────────────────────────────────────────── */
-  /*  III. 5 ACTS — SPLIT SCREEN                         */
-  /* ─────────────────────────────────────────────────── */
-  #acts { padding: 6rem 0; }
-
-  .act {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 600px;
-    overflow: hidden;
-  }
-
-  /* Alternating: image-left or text-left */
-  .act:nth-child(even) .act-visual { order: 2; }
-  .act:nth-child(even) .act-text   { order: 1; }
-
-  .act-visual {
-    position: relative;
-    overflow: hidden;
-    background: var(--ink-mid);
-  }
-
-  /* Film-frame corners */
-  .act-visual::before, .act-visual::after {
-    content: '';
-    position: absolute;
-    width: 30px; height: 30px;
-    border-color: rgba(227,124,77,0.5);
-    border-style: solid;
-    z-index: 3;
-  }
-  .act-visual::before { top: 24px; left: 24px; border-width: 2px 0 0 2px; }
-  .act-visual::after  { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; }
-
-  /* Gradient placeholder (replace with real photos) */
-  .act-visual-inner {
-    position: absolute;
-    inset: 0;
-    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
-  }
-  .act:hover .act-visual-inner { transform: scale(1.04); }
-
-  /* Pattern placeholders for each dome */
-  .dome-vis-1 {
-    background:
-      radial-gradient(ellipse 60% 70% at 30% 60%, #C8701A 0%, transparent 60%),
-      radial-gradient(ellipse 40% 50% at 75% 30%, #7A3A0A 0%, transparent 55%),
-      linear-gradient(160deg, #1A0A04 0%, #2D1408 100%);
-  }
-  .dome-vis-2 {
-    background:
-      radial-gradient(ellipse 70% 60% at 65% 40%, #4A3A28 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 20% 70%, #E8A040 0%, transparent 50%),
-      linear-gradient(145deg, #0A0804 0%, #1E1208 100%);
-  }
-  .dome-vis-3 {
-    background:
-      radial-gradient(ellipse 60% 60% at 40% 40%, #2A3A5A 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 80% 70%, #C87020 0%, transparent 50%),
-      linear-gradient(135deg, #080A14 0%, #1A100A 100%);
-  }
-  .dome-vis-4 {
-    background:
-      radial-gradient(ellipse 50% 60% at 60% 55%, #D4921A 0%, transparent 55%),
-      radial-gradient(ellipse 30% 30% at 20% 25%, #8A5A2A 0%, transparent 50%),
-      linear-gradient(150deg, #180C04 0%, #2A1808 100%);
-  }
-  .dome-vis-5 {
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 60%, #3A8A50 0%, transparent 55%),
-      radial-gradient(ellipse 40% 40% at 25% 35%, #C87820 0%, transparent 50%),
-      linear-gradient(140deg, #060E08 0%, #180E04 100%);
-  }
-
-  /* Floating number on visual */
-  .act-visual-num {
-    position: absolute;
-    bottom: 2rem; left: 2.5rem;
-    font-family: var(--display);
-    font-size: 8rem;
-    line-height: 1;
-    color: rgba(227,124,77,0.08);
-    z-index: 2;
-    pointer-events: none;
-    letter-spacing: -0.02em;
-  }
-
-  /* Thin horizontal film-strip lines */
-  .act-visual-strip {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 8px;
-    background: repeating-linear-gradient(
-      to right,
-      transparent 0px, transparent 18px,
-      rgba(227,124,77,0.2) 18px, rgba(227,124,77,0.2) 20px
-    );
-    z-index: 3;
-  }
-  .act-visual-strip.bot {
-    top: auto; bottom: 0;
-    transform: scaleX(-1);
-  }
-
-  .act-text {
-    background: var(--ink);
-    display: flex;
-    align-items: center;
-    padding: 5rem 5.5rem;
-    position: relative;
-  }
-
-  /* Subtle side border on text panels */
-  .act:nth-child(odd)  .act-text { border-left:  1px solid rgba(227,124,77,0.08); }
-  .act:nth-child(even) .act-text { border-right: 1px solid rgba(227,124,77,0.08); }
-
-  .act-text-inner { max-width: 420px; }
-
-  .act-roman {
-    font-family: var(--sans);
-    font-size: 0.6rem;
-    letter-spacing: 0.45em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 1.2rem;
-    display: block;
-  }
-
-  .act-title {
-    font-family: var(--display);
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
-    letter-spacing: 0.06em;
-    color: var(--white);
-    line-height: 1.15;
-    margin-bottom: 0.6rem;
-  }
-
-  .act-subtitle {
-    font-family: var(--serif);
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--ember);
-    margin-bottom: 2rem;
-    display: block;
-    letter-spacing: 0.04em;
-  }
-
-  .act-divider {
-    width: 32px;
-    height: 1px;
-    background: var(--ember-dim);
-    margin-bottom: 2rem;
-  }
-
-  .act-body {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 300;
-    line-height: 1.85;
-    color: var(--sand-dim);
-  }
-
-  .act-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 2.2rem;
-  }
-  .act-tag {
-    font-family: var(--sans);
-    font-size: 0.55rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ember);
-    border: 1px solid rgba(227,124,77,0.3);
-    padding: 0.35rem 0.85rem;
-  }
-
-  /* ─────────────────────────────────────────────────── */
-  /*  IV. GALLERY — ASYMMETRIC GRID                      */
-  /* ─────────────────────────────────────────────────── */
-  #gallery {
-    padding: 10rem 4rem;
-    max-width: 1400px;
+  .container {
+    max-width: 1300px;
     margin: 0 auto;
+    padding: 0 3rem;
   }
 
-  .gallery-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 4rem;
-  }
-
-  .gallery-header-left .section-tag {
-    font-family: var(--sans);
-    font-size: 0.6rem;
-    letter-spacing: 0.45em;
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
-    color: var(--ember);
+    color: var(--amber);
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1rem;
   }
-  .section-tag::before {
+  .section-label::before {
     content: '';
-    width: 36px; height: 1px;
-    background: var(--ember);
+    width: 40px;
+    height: 1px;
+    background: var(--amber);
   }
 
-  .gallery-title {
-    font-family: var(--display);
-    font-size: clamp(2.5rem, 5vw, 5rem);
-    letter-spacing: 0.04em;
-    color: var(--white);
-    line-height: 1.15;
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
   }
 
-  .gallery-credit {
-    font-family: var(--serif);
-    font-size: 0.95rem;
+  .section-title em { color: var(--amber); font-style: italic;}
+
+  .section-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(245,230,211,0.8);
     font-style: italic;
-    color: var(--sand-dim);
-    text-align: right;
-  }
-  .gallery-credit strong { color: var(--ember); font-style: normal; font-weight: 400; }
-
-  /* Asymmetric 4-column grid */
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr 1fr;
-    grid-template-rows: repeat(3, 240px);
-    gap: 4px;
   }
 
-  .g-cell {
+  /* ===== CONCEPT SECTION ===== */
+  #concept {
+    background: linear-gradient(180deg, var(--brown-deep) 0%, #1E1008 50%, var(--brown-deep) 100%);
     position: relative;
     overflow: hidden;
-    background: var(--ink-mid);
-    cursor: none;
   }
 
-  /* Spanning rules for asymmetry */
-  .g-cell:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; }
-  .g-cell:nth-child(2) { grid-column: 2; grid-row: 1; }
-  .g-cell:nth-child(3) { grid-column: 3; grid-row: 1 / span 2; }
-  .g-cell:nth-child(4) { grid-column: 4; grid-row: 1; }
-  .g-cell:nth-child(5) { grid-column: 2; grid-row: 2; }
-  .g-cell:nth-child(6) { grid-column: 4; grid-row: 2 / span 2; }
-  .g-cell:nth-child(7) { grid-column: 1 / span 2; grid-row: 3; }
-  .g-cell:nth-child(8) { grid-column: 3; grid-row: 3; }
+  #concept::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(227,124,77,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
 
-  /* Abstract photo stand-ins — painterly gradient compositions */
-  .g-cell:nth-child(1) .g-img { background: linear-gradient(160deg, #3A2010 20%, #0A0402 70%, #1A0C04 100%),
-    radial-gradient(ellipse 50% 60% at 40% 60%, rgba(200,110,30,0.4) 0%, transparent 70%); }
-  .g-cell:nth-child(2) .g-img { background: linear-gradient(135deg, #4A3020 0%, #0E0806 100%); }
-  .g-cell:nth-child(3) .g-img { background: linear-gradient(145deg, #1A1408 0%, #3A2A14 60%, #0A0602 100%); }
-  .g-cell:nth-child(4) .g-img { background: linear-gradient(160deg, #2A1A0C 0%, #080402 100%); }
-  .g-cell:nth-child(5) .g-img { background: linear-gradient(120deg, #0A0804 0%, #2A1E10 100%); }
-  .g-cell:nth-child(6) .g-img { background: linear-gradient(150deg, #3A2A18 0%, #0C0804 80%, #1A1008 100%); }
-  .g-cell:nth-child(7) .g-img { background: linear-gradient(135deg, #180E08 0%, #2E1E0E 50%, #0A0402 100%); }
-  .g-cell:nth-child(8) .g-img { background: linear-gradient(160deg, #1A0E06 0%, #3A2010 100%); }
+  .concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+  }
 
-  .g-img {
+  .concept-image-block {
+    position: relative;
+  }
+
+  .concept-frame {
+    position: relative;
+    width: 100%;
+    padding-bottom: 125%;
+    overflow: hidden;
+  }
+
+  .concept-window {
     position: absolute;
     inset: 0;
-    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    background: linear-gradient(135deg, #3A1A08 0%, #1A0A02 100%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 3px;
+    padding: 3px;
   }
-  /* --- SỬA LỖI HIỂN THỊ ẢNH --- */
-.act-visual-inner img,
-.g-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Giúp ảnh phủ kín khung mà không bị méo */
+
+  .cw-pane {
+    background: var(--brown-deep);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cw-pane .wl {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.8s ease;
+    pointer-events: none;
+  }
+  .cw-pane .wl-warm  { background: linear-gradient(135deg, #C8701A 0%, #7A3A0A 100%); box-shadow: 0 0 30px rgba(200,112,26,0.5) inset; }
+  .cw-pane .wl-blue  { background: linear-gradient(135deg, #4A6A9A 0%, #1A2A4A 100%); }
+  .cw-pane .wl-hot   { background: linear-gradient(135deg, #E8A040 0%, #9A5A10 100%); }
+
+  .cw-pane.on      .wl-warm { opacity: 1; }
+  .cw-pane.on-blue .wl-blue { opacity: 1; }
+  .cw-pane.on-warm .wl-hot  { opacity: 1; }
+  .cw-pane.span2 { grid-column: span 2; }
+
+  .concept-frame-border {
+    position: absolute;
+    inset: -1px;
+    border: 1px solid rgba(227,124,77,0.3);
+    pointer-events: none;
+  }
+
+  .concept-ornament {
+    position: absolute;
+    bottom: -2rem;
+    right: -2rem;
+    width: 200px;
+    height: 200px;
+    border: 1px solid rgba(227,124,77,0.15);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .concept-ornament::before {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(227,124,77,0.1);
+    border-radius: 50%;
+  }
+
+  .concept-stat-row {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(227,124,77,0.15);
+  }
+
+  .concept-stat { text-align: left; }
+  .concept-stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--amber);
+    display: block;
+    line-height: 1;
+  }
+  .concept-stat .label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.5);
+    margin-top: 0.25rem;
+  }
+
+  /* ===== TAGLINE BAND ===== */
+  .tagline-band {
+    background: var(--amber);
+    padding: 2rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .tagline-scroll {
+    display: flex;
+    gap: 4rem;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+
+  .tagline-item {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--brown-deep);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .tagline-item .sep {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brown-deep);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .tagline-item img {
+  height: 40px;
+  max-width: none;
+  width: auto;
+  object-fit: contain; /* Đảm bảo logo không bị cắt */
   display: block;
 }
 
-  /* Scatter warm light blobs on each */
-  .g-img::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 40% 50% at var(--lx, 30%) var(--ly, 60%), rgba(227,124,77,0.18) 0%, transparent 70%);
+/* Cho các ảnh trong phần JOURNEY (5 Domes) */
+.dome-card-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Phủ kín khung, cắt viền nếu cần */
+  display: block;
+}
+
+/* Cho các ảnh trong phần ARTISTS (Nghệ sĩ) */
+.artist-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Phủ kín khung, cắt viền nếu cần */
+  display: block;
+}
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
 
-  .g-cell:nth-child(1) .g-img::after { --lx: 35%; --ly: 65%; }
-  .g-cell:nth-child(2) .g-img::after { --lx: 65%; --ly: 35%; }
-  .g-cell:nth-child(3) .g-img::after { --lx: 45%; --ly: 55%; }
-  .g-cell:nth-child(4) .g-img::after { --lx: 30%; --ly: 70%; }
-  .g-cell:nth-child(5) .g-img::after { --lx: 70%; --ly: 40%; }
-  .g-cell:nth-child(6) .g-img::after { --lx: 50%; --ly: 50%; }
-  .g-cell:nth-child(7) .g-img::after { --lx: 25%; --ly: 60%; }
-  .g-cell:nth-child(8) .g-img::after { --lx: 60%; --ly: 40%; }
+  /* ===== JOURNEY / DOMES ===== */
+  #journey {
+    background: var(--brown-deep);
+    position: relative;
+  }
 
-  .g-cell:hover .g-img { transform: scale(1.06); }
+  .journey-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 6rem;
+  }
 
-  /* Overlay on hover */
-  .g-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(43,24,18,0.7);
-    opacity: 0;
-    transition: opacity 0.4s ease;
+  .domes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1.5px;
+  }
+
+  .dome-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: #1A0C06;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dome-card:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .dome-card:nth-child(2) { grid-column: 2 / span 2; grid-row: 1; }
+  .dome-card:nth-child(3) { grid-column: 1 / span 2; grid-row: 2; }
+  .dome-card:nth-child(4) { grid-column: 3; grid-row: 2; }
+  .dome-card:nth-child(5) { grid-column: 1 / span 3; grid-row: 3; }
+
+  .dome-card-inner {
+    padding: 3.5rem;
+    position: relative;
+    z-index: 1;
+    min-height: 320px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-  }
-  .g-cell:hover .g-overlay { opacity: 1; }
-
-  .g-overlay-text {
-    font-family: var(--serif);
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--ember);
-    letter-spacing: 0.08em;
-    text-align: center;
-    padding: 0 1.5rem;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: transform 0.5s ease;
   }
 
-  /* Small photo number label */
-  .g-num {
+  .dome-card:nth-child(5) .dome-card-inner {
+    min-height: 200px;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .dome-card-bg {
     position: absolute;
-    top: 1rem; left: 1rem;
-    font-family: var(--sans);
-    font-size: 0.55rem;
-    letter-spacing: 0.3em;
-    color: rgba(245,230,211,0.2);
-    z-index: 3;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
   }
 
-  /* ─────────────────────────────────────────────────── */
-  /*  V. INVITATION — REGISTER                           */
-  /* ─────────────────────────────────────────────────── */
-  #invite {
-    padding: 10rem 4rem 8rem;
-    text-align: center;
+  .dome-card:hover .dome-card-bg { transform: scale(1.05); }
+
+  .dome-bg-1 { background: linear-gradient(160deg, #3A1808 0%, #1A0A02 60%, #2A1008 100%); }
+  .dome-bg-2 { background: linear-gradient(135deg, #2A1A08 0%, #1A0802 60%, #3A1A06 100%); }
+  .dome-bg-3 { background: linear-gradient(145deg, #1A1A2A 0%, #0A0A1A 60%, #2A1008 100%); }
+  .dome-bg-4 { background: linear-gradient(160deg, #2A1A08 0%, #1A0A02 60%, #1A1A28 100%); }
+  .dome-bg-5 { background: linear-gradient(135deg, #3A1A08 0%, #1A0802 100%); }
+
+  .dome-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(20,6,0,0.95) 0%, rgba(20,6,0,0.3) 60%, transparent 100%);
+    transition: opacity 0.4s ease;
+  }
+
+  .dome-card:hover .dome-card-overlay { opacity: 0.7; }
+
+  .dome-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: rgba(227,124,77,0.12);
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    line-height: 1;
+    transition: all 0.4s ease;
+    user-select: none;
+  }
+
+  .dome-card:hover .dome-number { color: rgba(227,124,77,0.25); transform: scale(1.1); }
+
+  .dome-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .dome-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .dome-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(245,230,211,0.6);
+    line-height: 1.6;
+    max-width: 400px;
+    transition: all 0.4s ease;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .dome-card:hover .dome-desc { max-height: 100px; opacity: 1; }
+
+  .dome-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-top: 1.5rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .dome-card:hover .dome-cta { opacity: 1; transform: translateY(0); }
+
+  .dome-cta::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+  .dome-card:hover .dome-cta::after { transform: translateX(4px); }
+
+  /* Dome 5 layout */
+  .dome-card:nth-child(5) .dome-number { font-size: 8rem; }
+  .dome-card:nth-child(5) .dome-name { font-size: 2.2rem; }
+  .dome-card:nth-child(5) .dome-desc { max-width: 600px; }
+
+  /* Visual accents per dome */
+  .dome-accent {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.5s ease;
+  }
+  .dome-accent-1 {
+    width: 200px; height: 200px;
+    top: -50px; left: -50px;
+    background: radial-gradient(circle, rgba(227,124,77,0.15) 0%, transparent 70%);
+  }
+  .dome-accent-2 {
+    width: 300px; height: 300px;
+    bottom: -100px; right: -50px;
+    background: radial-gradient(circle, rgba(201,152,58,0.1) 0%, transparent 70%);
+  }
+  .dome-card:hover .dome-accent { transform: scale(1.3); }
+
+  /* ===== TIMELINE ===== */
+  #timeline {
+    background: linear-gradient(180deg, var(--brown-deep) 0%, #140800 50%, var(--brown-deep) 100%);
     position: relative;
     overflow: hidden;
   }
 
-  /* Soft ambient glow behind */
-  #invite::before {
+  #timeline::after {
     content: '';
     position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px; height: 300px;
-    background: radial-gradient(ellipse, rgba(227,124,77,0.07) 0%, transparent 70%);
-    pointer-events: none;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--amber), transparent);
   }
 
-  .invite-tag {
-    font-family: var(--sans);
-    font-size: 0.6rem;
-    letter-spacing: 0.45em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 2rem;
-    display: block;
-  }
-
-  .invite-title {
-    font-family: var(--display);
-    font-size: clamp(3.5rem, 8vw, 8rem);
-    letter-spacing: 0.04em;
-    color: var(--white);
-    line-height: 1.15;
-    margin-bottom: 1.5rem;
-  }
-  .invite-title .em { color: var(--ember); }
-
-  .invite-sub {
-    font-family: var(--serif);
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    font-style: italic;
-    color: var(--sand-dim);
-    margin-bottom: 4rem;
-    letter-spacing: 0.05em;
-  }
-
-  /* ── FORM ── */
-  .invite-form {
-    max-width: 560px;
-    margin: 0 auto 3.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    text-align: left;
-  }
-
-  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-
-  .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
-
-  .form-label {
-    font-family: var(--sans);
-    font-size: 0.58rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: rgba(245,230,211,0.35);
-  }
-  .req { color: var(--ember); }
-
-  .form-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(245,230,211,0.12);
-    color: var(--sand);
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 300;
-    padding: 0.75rem 0;
-    outline: none;
-    transition: border-color 0.35s;
-    -webkit-appearance: none;
-    border-radius: 0;
-    width: 100%;
-    position: relative;
-  }
-  .form-input::placeholder { color: rgba(245,230,211,0.18); font-style: italic; }
-  .form-input:focus { border-bottom-color: var(--ember); }
-  .form-input.err { border-bottom-color: #C05050; }
-
-  .form-err {
-    font-family: var(--sans);
-    font-size: 0.6rem;
-    color: #C07070;
-    min-height: 0.8rem;
-    display: block;
-  }
-
-  /* Date selector */
-  .date-row {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-  .date-opt input { display: none; }
-  .date-btn {
-    font-family: var(--sans);
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(245,230,211,0.4);
-    border: 1px solid rgba(245,230,211,0.1);
-    padding: 0.5rem 1.1rem;
-    cursor: none;
-    transition: all 0.25s;
-    display: block;
-  }
-  .date-opt:hover .date-btn { border-color: var(--ember-dim); color: var(--sand-dim); }
-  .date-opt input:checked + .date-btn {
-    background: var(--ember);
-    border-color: var(--ember);
-    color: var(--ink);
-  }
-
-  .form-note {
-    font-family: var(--sans);
-    font-size: 0.58rem;
-    color: rgba(245,230,211,0.2);
-    letter-spacing: 0.05em;
-    margin-top: 0.5rem;
-  }
-
-  /* Submit */
-  .invite-cta-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-
-  /* ── INVITE 2-COL LAYOUT ── */
-  .invite-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    max-width: 1160px;
-    margin: 0 auto;
-    border: 1px solid rgba(227,124,77,0.1);
-  }
-
-  .invite-left {
-    padding: 3.5rem 4rem;
-    border-right: 1px solid rgba(227,124,77,0.1);
-    position: relative;
-  }
-  .invite-left::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(to right, var(--ember), transparent);
-  }
-  .invite-left .invite-form { max-width: 100%; margin: 0 0 2rem; }
-  .invite-left .invite-cta-wrap { align-items: flex-start; }
-
-  .invite-right { display: flex; flex-direction: column; }
-
-  /* Map */
-  .map-wrap { flex: 1; position: relative; overflow: hidden; min-height: 320px; }
-  .map-wrap iframe {
-    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
-    filter: saturate(0.22) contrast(1.1) brightness(0.65) sepia(0.45);
-    transition: filter 0.5s ease;
-  }
-  .map-wrap:hover iframe { filter: saturate(0.55) contrast(1.05) brightness(0.9) sepia(0.18); }
-  .map-tint {
-    position: absolute; inset: 0;
-    background: rgba(43,24,18,0.28);
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-    z-index: 1;
-  }
-  .map-wrap:hover .map-tint { opacity: 0; }
-
-  .map-bar {
-    background: rgba(43,24,18,0.96);
-    border-bottom: 1px solid rgba(227,124,77,0.15);
-    padding: 0.7rem 1.4rem;
-    display: flex; align-items: center;
-    justify-content: space-between;
-    position: relative; z-index: 2;
-  }
-  .map-bar-label {
-    font-family: var(--sans); font-size: 0.56rem;
-    letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--ember);
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .map-dir-link {
-    font-family: var(--sans); font-size: 0.52rem;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: rgba(245,230,211,0.28); text-decoration: none;
-    display: flex; align-items: center; gap: 0.35rem;
-    transition: color 0.3s;
-  }
-  .map-dir-link:hover { color: var(--ember); }
-
-  /* Info strip bottom */
-  .map-info-strip {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid rgba(227,124,77,0.1);
-  }
-  .msi-item {
-    padding: 1.2rem 0.8rem;
-    border-right: 1px solid rgba(227,124,77,0.07);
+  .timeline-header {
     text-align: center;
-  }
-  .msi-item:last-child { border-right: none; }
-  .msi-label {
-    font-family: var(--sans); font-size: 0.48rem;
-    letter-spacing: 0.28em; text-transform: uppercase;
-    color: rgba(245,230,211,0.22); display: block; margin-bottom: 0.35rem;
-  }
-  .msi-val {
-    font-family: var(--serif); font-size: 0.82rem;
-    font-style: italic; color: rgba(245,230,211,0.5); display: block;
-  }
-  .msi-val.free {
-    font-family: var(--display); font-style: normal;
-    font-size: 0.95rem; letter-spacing: 0.1em; color: var(--ember);
+    margin-bottom: 5rem;
   }
 
-  .btn-register {
+  .timeline-date-badge {
     display: inline-flex;
     align-items: center;
     gap: 1rem;
-    font-family: var(--sans);
-    font-size: 0.68rem;
-    font-weight: 400;
-    letter-spacing: 0.35em;
+    padding: 0.6rem 1.5rem;
+    border: 1px solid rgba(227,124,77,0.3);
+    margin-bottom: 2rem;
+    background: rgba(227,124,77,0.05);
+  }
+
+  .timeline-date-badge span {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--sand);
-    border: 1px solid rgba(245,230,211,0.25);
-    padding: 1.2rem 3.5rem;
-    background: transparent;
-    cursor: none;
-    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    color: var(--amber-light);
+  }
+
+  .timeline-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .timeline-table thead tr {
+    border-bottom: 1px solid rgba(227,124,77,0.25);
+  }
+
+  .timeline-table th {
+    padding: 1rem 1.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--amber);
+    text-align: left;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+  }
+
+  .timeline-table tbody tr {
+    border-bottom: 1px solid rgba(245,230,211,0.05);
+    transition: background 0.3s ease;
+  }
+
+  .timeline-table tbody tr:hover {
+    background: rgba(227,124,77,0.04);
+  }
+
+  .timeline-table td {
+    padding: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: rgba(245,230,211,0.7);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .timeline-table td.time-col {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--amber-light);
+    white-space: nowrap;
+    font-weight: 300;
+  }
+
+  .timeline-table td.activity-col {
+    font-weight: 600;
+    color: var(--cream);
+    font-style: italic;
+  }
+
+  .timeline-table td.detail-col {
+    font-weight: 300;
+    font-size: 0.9rem;
+  }
+
+  .tl-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    border-radius: 2px;
+    margin-top: 0.4rem;
+  }
+  .tl-badge.vip { background: rgba(201,152,58,0.2); color: var(--gold); border: 1px solid rgba(201,152,58,0.3); }
+  .tl-badge.all { background: rgba(227,124,77,0.15); color: var(--amber-light); border: 1px solid rgba(227,124,77,0.25); }
+  .tl-badge.eve { background: rgba(107,139,181,0.15); color: #8AABCF; border: 1px solid rgba(107,139,181,0.25); }
+
+  /* ===== ARTISTS ===== */
+  #artists {
+    background: var(--brown-deep);
+  }
+
+  .artists-header { text-align: center; margin-bottom: 5rem; }
+
+  .artists-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .artist-card {
     position: relative;
     overflow: hidden;
-    text-decoration: none;
+    aspect-ratio: 3/4;
+    background: #1A0C06;
+    cursor: pointer;
   }
-  .btn-register::before {
+
+  .artist-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s ease;
+  }
+  .artist-card:hover .artist-bg { transform: scale(1.08); }
+
+  .artist-bg-1 { background: linear-gradient(160deg, #4A2010 0%, #1A0A02 100%); }
+  .artist-bg-2 { background: linear-gradient(160deg, #2A1A08 0%, #0A0804 100%); }
+  .artist-bg-3 { background: linear-gradient(160deg, #1A2838 0%, #0A0A18 100%); }
+  .artist-bg-4 { background: linear-gradient(160deg, #2A1808 0%, #1A0A04 100%); }
+
+  .artist-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(20,6,0,0.95) 0%, transparent 100%);
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  .artist-card:hover .artist-info { transform: translateY(0); }
+
+  .artist-name-visible {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 2rem;
+    right: 2rem;
+    transition: all 0.4s ease;
+  }
+  .artist-card:hover .artist-name-visible { opacity: 0; }
+
+  .artist-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+  }
+
+  .artist-role {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .artist-award {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: rgba(245,230,211,0.5);
+    margin-top: 0.5rem;
+  }
+
+  .artist-initial {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(227,124,77,0.08);
+    user-select: none;
+    transition: all 0.4s ease;
+  }
+  .artist-card:hover .artist-initial { color: rgba(227,124,77,0.15); transform: translate(-50%, -50%) scale(1.1); }
+
+  /* ===== REGISTER ===== */
+  #register {
+    background: linear-gradient(160deg, #1E0C04 0%, #0A0402 50%, #1E0C04 100%);
+    text-align: center;
+    padding: 10rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #register::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(227,124,77,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .register-inner { position: relative; z-index: 1; }
+
+  .register-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+
+  .register-title em { color: var(--amber); font-style: italic; }
+
+  .register-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: rgba(245,230,211,0.6);
+    max-width: 550px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+  }
+
+  /* QR Side → Map Side */
+  .reg-qr-side {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .map-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(227,124,77,0.25);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .map-label-top {
+    background: rgba(43,24,18,0.95);
+    border-bottom: 1px solid rgba(227,124,77,0.2);
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--amber-light);
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+  }
+
+  .map-pin-icon {
+    font-size: 1rem;
+    color: var(--amber);
+    line-height: 1;
+  }
+
+  .map-frame-wrap {
+    position: relative;
+    width: 100%;
+    height: 240px;
+  }
+
+  .map-frame-wrap iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: saturate(0.3) contrast(1.1) brightness(0.85) sepia(0.3);
+    transition: filter 0.4s ease;
+  }
+
+  .map-frame-wrap:hover iframe {
+    filter: saturate(0.6) contrast(1.05) brightness(0.95) sepia(0.15);
+  }
+
+  /* Amber tint overlay that fades on hover */
+  .map-overlay-tint {
+    position: absolute;
+    inset: 0;
+    background: rgba(43,24,18,0.18);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .map-frame-wrap:hover .map-overlay-tint { opacity: 0; }
+
+  .map-directions-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.2rem;
+    background: rgba(227,124,77,0.07);
+    border-top: 1px solid rgba(227,124,77,0.2);
+    color: var(--amber);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: 'Outfit', sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .map-directions-btn:hover {
+    background: var(--amber);
+    color: var(--brown-deep);
+  }
+
+  .map-arrow {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+  }
+  .map-directions-btn:hover .map-arrow { transform: translate(2px, -2px); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #0D0501;
+    padding: 4rem 0 2rem;
+    border-top: 1px solid rgba(227,124,77,0.1);
+  }
+
+  .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1.2fr 1fr; /* Tăng chiều rộng cho cột Liên hệ */
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    /* Đảm bảo chữ trong footer không bị nghiêng nếu bạn muốn giống ảnh mẫu */
+    .footer-col ul li span, 
+    .footer-col ul li a {
+        font-style: normal !important; /* Chuyển từ font nghiêng sang đứng giống ảnh */
+        font-family: 'Outfit', sans-serif !important; /* Dùng font hiện đại thay cho font Garamond */
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+    .footer-col i {
+        color: var(--amber); /* Icon sẽ có màu cam đặc trưng của VanPhu */
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    /* Hiệu ứng khi di chuột vào link */
+    .footer-col ul li a:hover i {
+        color: var(--cream); /* Icon đổi sang màu kem khi hover */
+        transform: translateY(-2px);
+    }
+
+    /* Đảm bảo text không bị lệch */
+    .footer-col ul li a {
+        display: flex;
+        align-items: center;
+    }
+
+  .footer-brand .brand-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .footer-brand p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(245,230,211,0.4);
+    line-height: 1.7;
+    max-width: 300px;
+  }
+
+  .footer-col h4 {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1.5rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.75rem; }
+  .footer-col ul li a, .footer-col ul li span {
+    color: rgba(245,230,211,0.4);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    transition: color 0.3s;
+  }
+  .footer-col ul li a:hover { color: var(--amber-light); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(245,230,211,0.05);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-bottom p {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,230,211,0.2);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ===== RESPONSIVE ===== */
+  /* ===== REGISTER FORM ===== */
+  .register-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 4rem auto 0;
+    text-align: left;
+  }
+
+  .reg-form-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(227,124,77,0.18);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reg-form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--amber-dark), var(--amber), var(--amber-light), transparent);
+  }
+
+  .reg-form-header { margin-bottom: 2.5rem; }
+
+  .reg-form-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .reg-form-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(245,230,211,0.4);
+    margin-top: 0.4rem;
+  }
+
+  .form-row { margin-bottom: 1.75rem; }
+  .form-row.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; }
+
+  .form-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.5);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+
+  .req { color: var(--amber); }
+
+  .form-input-wrap { position: relative; }
+
+  .form-input {
+    width: 100%;
+    background: rgba(245,230,211,0.04);
+    border: 1px solid rgba(245,230,211,0.1);
+    border-bottom: 1px solid rgba(227,124,77,0.3);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
+  .form-input::placeholder { color: rgba(245,230,211,0.2); }
+
+  .form-input:focus {
+    border-color: rgba(227,124,77,0.6);
+    border-bottom-color: var(--amber);
+    background: rgba(245,230,211,0.06);
+    box-shadow: 0 4px 20px rgba(227,124,77,0.08);
+  }
+
+  .form-input.error { border-bottom-color: #E05050; }
+
+  .form-input-line {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--amber);
+    transition: width 0.35s ease;
+  }
+
+  .form-input:focus ~ .form-input-line { width: 100%; }
+
+  .form-error {
+    font-size: 0.7rem;
+    color: #E07070;
+    font-family: 'Outfit', sans-serif;
+    margin-top: 0.4rem;
+    min-height: 1rem;
+    display: block;
+  }
+
+  /* Date radio buttons */
+  .form-date-group {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .date-option input { display: none; }
+
+  .date-btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid rgba(227,124,77,0.25);
+    color: rgba(245,230,211,0.5);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+  }
+
+  .date-option:hover .date-btn {
+    border-color: rgba(227,124,77,0.5);
+    color: var(--cream-dark);
+    background: rgba(227,124,77,0.06);
+  }
+
+  .date-option input:checked + .date-btn {
+    border-color: var(--amber);
+    color: var(--brown-deep);
+    background: var(--amber);
+    font-weight: 500;
+  }
+
+  /* Submit button */
+  .reg-submit-btn {
+    width: 100%;
+    padding: 1.1rem 2rem;
+    background: var(--amber);
+    color: var(--brown-deep);
+    border: none;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+
+  .reg-submit-btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--ember);
-    transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    background: var(--cream);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-  .btn-register:hover { color: var(--ink); border-color: var(--ember); }
-  .btn-register:hover::before { transform: none; }
-  .btn-register span { position: relative; z-index: 1; }
-  .btn-arrow { font-size: 1rem; transition: transform 0.3s; position: relative; z-index: 1; }
-  .btn-register:hover .btn-arrow { transform: translateX(4px); }
 
-  /* Success message */
-  .success-msg {
-    display: none;
+  .reg-submit-btn:hover::before { transform: translateX(0); }
+  .reg-submit-btn span { position: relative; z-index: 1; }
+
+  .submit-arrow { transition: transform 0.3s ease; }
+  .reg-submit-btn:hover .submit-arrow { transform: translateX(4px); }
+
+  .reg-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .reg-submit-btn:disabled::before { display: none; }
+
+  /* Loading dots */
+  .dot-spin {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--brown-deep);
+    animation: dotBounce 0.9s ease-in-out infinite;
+    margin: 0 2px;
+  }
+  .dot-spin:nth-child(2) { animation-delay: 0.15s; }
+  .dot-spin:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  .form-disclaimer {
+    font-size: 0.7rem;
+    color: rgba(245,230,211,0.25);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.6;
+    margin-top: 1.25rem;
     text-align: center;
-    padding: 3rem;
-    border: 1px solid rgba(227,124,77,0.2);
-    background: rgba(227,124,77,0.04);
-    max-width: 480px;
-    margin: 0 auto;
   }
-  .success-msg.show { display: block; }
-  .success-glyph { font-size: 2rem; color: var(--ember); display: block; margin-bottom: 1.2rem; }
-  .success-head { font-family: var(--display); font-size: 2rem; letter-spacing: 0.06em; color: var(--white); margin-bottom: 0.8rem; }
-  .success-body { font-family: var(--serif); font-style: italic; color: var(--sand-dim); font-size: 1rem; line-height: 1.7; }
-  .success-body strong { color: var(--ember); font-style: normal; }
 
-  /* Event details strip */
-  .invite-details {
-    display: flex;
-    justify-content: center;
-    gap: 4rem;
-    margin-top: 5rem;
-    padding-top: 3rem;
-    border-top: 1px solid rgba(245,230,211,0.06);
-  }
-  .id-item { text-align: center; }
-  .id-label {
-    font-family: var(--sans);
-    font-size: 0.55rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: rgba(245,230,211,0.28);
+  /* Success state */
+  .success-state { text-align: center; padding: 2rem 0; }
+
+  .success-icon {
+    font-size: 3rem;
+    color: var(--amber);
+    margin-bottom: 1.5rem;
     display: block;
-    margin-bottom: 0.5rem;
+    animation: successPulse 1.5s ease-out;
   }
-  .id-val {
-    font-family: var(--serif);
+
+  @keyframes successPulse {
+    0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+    60% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+
+  .success-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
     font-style: italic;
-    font-size: 1rem;
-    color: var(--sand-dim);
+    color: rgba(245,230,211,0.65);
+    line-height: 1.7;
+    margin-bottom: 2rem;
   }
-  .id-val.free { color: var(--ember); font-style: normal; font-family: var(--display); letter-spacing: 0.1em; font-size: 1.1rem; }
 
-  /* ─────────────────────────────────────────────────── */
-  /*  FOOTER                                             */
-  /* ─────────────────────────────────────────────────── */
-  footer {
-  padding: 6rem 4rem 3rem !important; /* Tăng padding để sang trọng hơn */
-  display: block !important; /* Chuyển từ flex sang block để chứa grid */
-}
+  .success-body strong { color: var(--amber-light); font-style: normal; }
 
-.footer-grid-main {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 4rem;
-}
+  .success-details {
+    border: 1px solid rgba(227,124,77,0.15);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    background: rgba(227,124,77,0.03);
+  }
 
-.foot-h4 {
-  font-family: var(--sans);
-  font-size: 0.65rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--ember);
-  margin-bottom: 1.8rem;
-}
+  .success-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
 
-.foot-ul {
-  list-style: none;
-  font-family: var(--serif);
-  font-size: 0.95rem;
-  color: var(--sand-dim);
-  line-height: 2;
-}
+  .sd-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.35);
+    font-family: 'Outfit', sans-serif;
+  }
 
-.foot-ul a {
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.3s ease;
-}
+  .sd-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    color: var(--cream-dark);
+    text-align: right;
+  }
 
-.foot-ul a:hover {
-  color: var(--ember);
-}
+  /* QR Side */
+  .reg-qr-side {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
 
-.social-links i {
-  width: 20px;
-  color: var(--ember-dim);
-  transition: all 0.3s ease;
-}
+  .reg-event-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(227,124,77,0.12);
+    background: rgba(227,124,77,0.03);
+  }
 
-.social-links a:hover i {
-  color: var(--ember);
-  transform: translateY(-2px);
-}
+  .rei-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
 
-@media (max-width: 1024px) {
-  .footer-grid-main { grid-template-columns: 1fr 1fr; }
-  footer { padding: 4rem 1.5rem 2rem !important; }
-}
+  .rei-icon {
+    color: var(--amber);
+    font-size: 0.75rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
 
-@media (max-width: 768px) {
-  .footer-grid-main { grid-template-columns: 1fr; gap: 2.5rem; }
-}
+  .rei-label {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,230,211,0.3);
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 0.2rem;
+  }
 
-  /* ─────────────────────────────────────────────────── */
-  /*  RESPONSIVE                                         */
-  /* ─────────────────────────────────────────────────── */
+  .rei-val {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    color: rgba(245,230,211,0.7);
+    font-style: italic;
+  }
+
   @media (max-width: 1024px) {
-    .act { grid-template-columns: 1fr; min-height: auto; }
-    .act:nth-child(even) .act-visual,
-    .act:nth-child(even) .act-text { order: unset; }
-    .act-visual { height: 360px; }
-    .act-text { padding: 3.5rem 2.5rem; }
-    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-    .g-cell:nth-child(n) { grid-column: auto; grid-row: auto; }
-    .g-cell { height: 200px; }
-    .invite-details { gap: 2rem; flex-wrap: wrap; }
-    .invite-layout { grid-template-columns: 1fr; }
-    .invite-left { border-right: none; border-bottom: 1px solid rgba(227,124,77,0.1); }
-    .map-info-strip { grid-template-columns: repeat(2, 1fr); }
-    .msi-item:nth-child(2) { border-right: none; }
+    .register-layout { grid-template-columns: 1fr; max-width: 600px; }
+    .reg-qr-side { flex-direction: row; align-items: flex-start; flex-wrap: wrap; }
+    .concept-grid { grid-template-columns: 1fr; gap: 4rem; }
+    .domes-grid { grid-template-columns: 1fr 1fr; }
+    .dome-card:nth-child(1) { grid-column: 1; }
+    .dome-card:nth-child(2) { grid-column: 2; }
+    .dome-card:nth-child(3) { grid-column: 1; }
+    .dome-card:nth-child(4) { grid-column: 2; }
+    .dome-card:nth-child(5) { grid-column: 1 / span 2; }
+    .artists-row { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
   }
+
   @media (max-width: 768px) {
-    #nav { padding: 1.2rem 1.5rem; }
-    #nav.scrolled { padding: 0.9rem 1.5rem; }
-    #nav .nav-links { display: none; }
-    #philosophy { padding: 6rem 1.5rem; }
-    .philosophy-card { padding: 3rem 2rem; }
-    .gallery-grid { grid-template-columns: 1fr; }
-    .g-cell { height: 220px; }
-    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
-    .foot-links { justify-content: center; }
-    #invite { padding: 6rem 1.5rem 5rem; }
-    .form-row-2 { grid-template-columns: 1fr; }
-    .invite-details { flex-direction: column; align-items: center; gap: 1.5rem; }
-    #gallery { padding: 6rem 1.5rem; }
-    .gallery-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .container { padding: 0 1.5rem; }
+    section { padding: 5rem 0; }
+    .domes-grid { grid-template-columns: 1fr; }
+    .dome-card:nth-child(n) { grid-column: 1; grid-row: auto; }
+    .dome-card-inner { min-height: 250px; }
+    .artists-row { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    .timeline-table th:nth-child(3), .timeline-table td:nth-child(3) { display: none; }
+    .form-row.two-col { grid-template-columns: 1fr; }
+    .reg-form-card { padding: 2rem 1.5rem; }
+    .register-layout { margin-top: 2.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-cta { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .btn-outline { margin-left: 0; }
   }
 </style>
 </head>
 <body>
 
-<!-- CURSOR -->
-<div class="cursor" id="cur"></div>
-<div class="cursor-ring" id="ring"></div>
-
-<!-- NAV -->
-<nav id="nav">
-  <div class="nav-logo"><img src="assets/images/VPI_Logo.png" height="40px" alt=""></div>
-  <ul class="nav-links">
-    <li><a href="#philosophy">Triết Lý</a></li>
-    <li><a href="#acts">5 Dome</a></li>
-    <li><a href="#gallery">Triển Lãm</a></li>
-    <li><a href="#invite">Đăng Ký</a></li>
-  </ul>
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo"><img src="assets/images/VPI_Logo.png" style="height: 40px;" alt=""></div>
+  <div class="nav-links">
+    <a href="#concept">Về triển lãm</a>
+    <a href="#journey">Hành trình</a>
+    <a href="#timeline">Lịch trình</a>
+    <a href="#artists">Nghệ sĩ</a>
+    <a href="#register">Đăng ký</a>
+  </div>
 </nav>
 
-<!-- ════════════════════════════════════════ -->
-<!--  I. HERO                                 -->
-<!-- ════════════════════════════════════════ -->
+<!-- HERO -->
 <section id="hero">
-  <div class="win-grid" id="winGrid"></div>
-  <div class="hero-veil"></div>
+  <div class="hero-bg">
+    <div class="windows-grid" id="windowsGrid"></div>
+    <div class="hero-overlay"></div>
+  </div>
 
   <div class="hero-content">
-    <p class="hero-eyebrow">VanPhu × Triển Lãm Đa Giác Quan · Tháng 4 · 2026</p>
-    
+    <p class="hero-eyebrow">VanPhu × Triển Lãm Đa Giác Quan</p>
     <h1 class="hero-title">
-      <span class="accent">Muôn Vị</span>
-      <span >Nhân Sinh</span>
+      <span class="accent">Muôn Vị</span><br>
+      Nhân Sinh
     </h1>
-    <div class="hero-divider"></div>
-    <p class="hero-sub">"From The City's Beat — To Your Heart's Seat"</p>
+    <p class="hero-subtitle">"From The City's Beat To Your Heart's Seat"</p>
     <div class="hero-meta">
       <span>Tòa Exhibition</span>
-      <span class="sep"></span>
+      <span class="dot"></span>
       <span>Công Viên 23 Tháng 9</span>
-      <span class="sep"></span>
-      <span>3 – 5 Tháng 4 · TP.HCM</span>
-      <span class="sep"></span>
-      <span>Miễn phí</span>
+      <span class="dot"></span>
+      <span>Tháng 4 · 2026 · TP.HCM</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#register" class="btn-primary"><span>Đăng Ký Vé</span></a>
+      <a href="#concept" class="btn-outline">Khám Phá</a>
     </div>
   </div>
 
-  <div class="hero-scroll-cue">
+  <div class="hero-scroll">
     <div class="scroll-line"></div>
     <span>Cuộn xuống</span>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════ -->
-<!--  II. PHILOSOPHY                          -->
-<!-- ════════════════════════════════════════ -->
-<section id="philosophy">
-  <div class="philosophy-card reveal">
-    <div class="ph-ornament-tr"></div>
-    <div class="ph-ornament-bl"></div>
-    <span class="ph-tag">Triết Lý</span>
-    <p class="ph-question">
-      "Giữa đất chật người đông,<br>liệu bạn đã tìm thấy<br><em>Tổ Ấm của riêng mình?</em>"
-    </p>
-    <div class="ph-line"></div>
-    <p class="ph-body">
-      Một không gian trải nghiệm đa giác quan — nơi nhịp sống Sài Gòn gặp gỡ những tâm hồn vị nhân sinh. Tại đây, mỗi điểm chạm là một lát cắt cảm xúc, dẫn bạn đến những giá trị không đổi qua năm tháng. Văn Phú không "đo ni đóng giày" — Văn Phú muốn kiến tạo một Ngôi Nhà để bạn thuộc về.
-    </p>
+<!-- TAGLINE BAND -->
+<div class="tagline-band">
+  <div class="tagline-scroll" id="taglineScroll">
+    <div class="tagline-item"><img src="assets/images/doitac-1.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-2.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-3.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-4.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-5.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-6.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-7.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-8.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-9.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-10.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-11.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-1.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-2.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-3.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-4.png" alt=""><span class="sep"></span></div>
+    <div class="tagline-item"><img src="assets/images/doitac-5.png" alt=""><span class="sep"></span></div>
   </div>
-</section>
+</div>
 
-<!-- ════════════════════════════════════════ -->
-<!--  III. 5 ACTS                             -->
-<!-- ════════════════════════════════════════ -->
-<section id="acts">
+<!-- CONCEPT SECTION -->
+<section id="concept">
+  <div class="container">
+    <div class="concept-grid">
+      <div class="concept-image-block reveal">
+        <div class="concept-frame">
+          <div class="concept-window" id="conceptWindow">
+            <div class="cw-pane on-warm" style="--r:1;--c:1"></div>
+            <div class="cw-pane" style="--r:1;--c:2"></div>
+            <div class="cw-pane on" style="--r:1;--c:3"></div>
+            <div class="cw-pane on" style="--r:2;--c:1"></div>
+            <div class="cw-pane on-blue" style="--r:2;--c:2"></div>
+            <div class="cw-pane" style="--r:2;--c:3"></div>
+            <div class="cw-pane" style="--r:3;--c:1"></div>
+            <div class="cw-pane on-warm" style="--r:3;--c:2"></div>
+            <div class="cw-pane on" style="--r:3;--c:3"></div>
+            <div class="cw-pane on-blue" style="--r:4;--c:1"></div>
+            <div class="cw-pane" style="--r:4;--c:2"></div>
+            <div class="cw-pane on-warm" style="--r:4;--c:3"></div>
+          </div>
+          <div class="concept-frame-border"></div>
+        </div>
+        <div class="concept-ornament"></div>
+      </div>
 
-  <!-- DOME I -->
-  <div class="act">
-    <div class="act-visual">
-      <div class="act-visual-strip"></div>
-      <div class="act-visual-strip bot"></div>
-      <div class="act-visual-inner dome-vis-1"><img src="/assets/images/dome1.jpg" alt=""></div>
-      <div class="act-visual-num">I</div>
-    </div>
-    <div class="act-text">
-      <div class="act-text-inner reveal">
-        <span class="act-roman">Dome · I</span>
-        <h2 class="act-title">Một lời chào — Muôn vị ấm</h2>
-        <span class="act-subtitle">One Greeting — Myriad Warmth</span>
-        <div class="act-divider"></div>
-        <p class="act-body">
-          Hành trình bắt đầu từ một lời chào. Mỗi vùng miền, mỗi nền văn hóa có cách chào hỏi riêng — nhưng tất cả đều chứa đựng cùng một nhiệt độ: sự ấm áp của con người với con người. Bạn sẽ nhận một "Resident Card" mang dấu ấn cá nhân để bắt đầu hành trình.
+      <div class="concept-text">
+        <p class="section-label reveal">Về Triển Lãm</p>
+        <h2 class="section-title reveal reveal-delay-1">
+          <p style="margin-bottom: 15px;">Giữa đất chật<br>người đông,<br></p>
+          <em>bạn có tổ ấm?</em>
+        </h2>
+        <p class="section-body reveal reveal-delay-2">
+          Một không gian trải nghiệm đa giác quan – nơi nhịp sống Sài Gòn gặp gỡ những tâm hồn vị nhân sinh. Tại đây, mỗi điểm chạm là một lát cắt cảm xúc, dẫn bạn đến những giá trị không đổi qua năm tháng.
         </p>
-        <div class="act-tags">
-          <span class="act-tag">Interactive Check-in</span>
-          <span class="act-tag">QR Ticket</span>
-          <span class="act-tag">Resident Card</span>
+        <p class="section-body reveal reveal-delay-3" style="margin-top:1.5rem;">
+          Văn Phú không "đo ni đóng giày" nơi ở như các khuôn mẫu khác. Văn Phú muốn kiến tạo một Ngôi Nhà để bạn <em>thuộc về</em>.
+        </p>
+
+        <div class="concept-stat-row reveal reveal-delay-4">
+          <div class="concept-stat">
+            <span class="num">5</span>
+            <span class="label">Không gian Dome</span>
+          </div>
+          <div class="concept-stat">
+            <span class="num">3</span>
+            <span class="label">Ngày triển lãm</span>
+          </div>
+          <div class="concept-stat">
+            <span class="num">∞</span>
+            <span class="label">Cảm xúc</span>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- DOME II -->
-  <div class="act">
-    <div class="act-visual">
-      <div class="act-visual-strip"></div>
-      <div class="act-visual-strip bot"></div>
-      <div class="act-visual-inner dome-vis-2" ><img src="/assets/images/dome2.jpg" alt=""></div>
-      <div class="act-visual-num">II</div>
-    </div>
-    <div class="act-text">
-      <div class="act-text-inner reveal">
-        <span class="act-roman">Dome · II</span>
-        <h2 class="act-title">Muôn sắc <br>Sài Gòn</h2>
-        <span class="act-subtitle">Myriad Colors of Saigon</span>
-        <div class="act-divider"></div>
-        <p class="act-body">
-          Triển lãm nhiếp ảnh đường phố của Kmon Nguyễn — Top 100 Street Photo 35Awards 2024. Những khoảnh khắc sống động nhất của Sài Gòn được đóng khung trong ánh sáng vàng, kể câu chuyện về một thành phố không bao giờ ngủ nhưng luôn ấm lòng.
-        </p>
-        <div class="act-tags">
-          <span class="act-tag">Photo Exhibition</span>
-          <span class="act-tag">Kmon Nguyễn</span>
-          <span class="act-tag">AR / VR</span>
-          <span class="act-tag">Street Performance</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DOME III -->
-  <div class="act">
-    <div class="act-visual">
-      <div class="act-visual-strip"></div>
-      <div class="act-visual-strip bot"></div>
-      <div class="act-visual-inner dome-vis-3"><img src="/assets/images/dome3.jpg" alt=""></div>
-      <div class="act-visual-num">III</div>
-    </div>
-    <div class="act-text">
-      <div class="act-text-inner reveal">
-        <span class="act-roman">Dome · III</span>
-        <h2 class="act-title">Muôn màu <br>văn hóa</h2>
-        <span class="act-subtitle">Myriad Cultural Hues</span>
-        <div class="act-divider"></div>
-        <p class="act-body">
-          Không gian 360° mapping tái hiện sự đa dạng văn hóa của Sài Gòn qua những khung cửa sổ — mỗi ô cửa là một vùng đất, một câu chuyện. Nghệ sĩ Cao Hoàng Long và Minh Hằng biến những bức tường thành ký ức sống động.
-        </p>
-        <div class="act-tags">
-          <span class="act-tag">360° Mapping</span>
-          <span class="act-tag">VR Art</span>
-          <span class="act-tag">Cao Hoàng Long</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DOME IV -->
-  <div class="act">
-    <div class="act-visual">
-      <div class="act-visual-strip"></div>
-      <div class="act-visual-strip bot"></div>
-      <div class="act-visual-inner dome-vis-4"><img src="/assets/images/dome4.jpg" alt=""></div>
-      <div class="act-visual-num">IV</div>
-    </div>
-    <div class="act-text">
-      <div class="act-text-inner reveal">
-        <span class="act-roman">Dome · IV</span>
-        <h2 class="act-title">Muôn vị <br>giấc mơ</h2>
-        <span class="act-subtitle">Myriad Dream Flavors</span>
-        <div class="act-divider"></div>
-        <p class="act-body">
-          Khu VIP lounge với dome mapping tương tác — nơi bạn hình dung căn nhà trong mơ của mình qua công nghệ và nghệ thuật. Signature cocktail, trưng bày nội thất cao cấp từ B+ Furniture, Hay Decor và ZERO Furniture. Dành riêng cho khách đã hoàn thành thử thách xã hội.
-        </p>
-        <div class="act-tags">
-          <span class="act-tag">VIP Lounge</span>
-          <span class="act-tag">Dream Visualization</span>
-          <span class="act-tag">Luxury Furniture</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DOME V -->
-  <div class="act">
-    <div class="act-visual">
-      <div class="act-visual-strip"></div>
-      <div class="act-visual-strip bot"></div>
-      <div class="act-visual-inner dome-vis-5"><img src="/assets/images/dome5.jpg" alt=""></div>
-      <div class="act-visual-num">V</div>
-    </div>
-    <div class="act-text">
-      <div class="act-text-inner reveal">
-        <span class="act-roman">Dome · V</span>
-        <h2 class="act-title">Muôn niềm <br>vui nhỏ</h2>
-        <span class="act-subtitle">Myriad Small Joys</span>
-        <div class="act-divider"></div>
-        <p class="act-body">
-          Workshop làm terrarium — mang một mảnh thiên nhiên về nhà. Merchandise độc quyền của triển lãm. Talkshow Homentor về hành trình tìm kiếm tổ ấm. Và mỗi buổi tối, âm nhạc acoustic từ Phan Mạnh Quỳnh, Vũ Cát Tường, Hoàng Dũng và Paradox sẽ khép lại ngày dài bằng những giai điệu ấm lòng.
-        </p>
-        <div class="act-tags">
-          <span class="act-tag">Terrarium Workshop</span>
-          <span class="act-tag">Acoustic Concert</span>
-          <span class="act-tag">Merchandise</span>
-          <span class="act-tag">Homentor Talk</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<!-- ════════════════════════════════════════ -->
-<!--  IV. GALLERY                             -->
-<!-- ════════════════════════════════════════ -->
-<section id="gallery">
-  <div class="gallery-header reveal">
-    <div class="gallery-header-left">
-      <span class="section-tag">Triển Lãm Ảnh</span>
-      <h2 class="gallery-title">Kmon<br>Nguyễn</h2>
-    </div>
-    <p class="gallery-credit">
-      Nhiếp ảnh gia đường phố<br>
-      <strong>Top 100 · 35Awards 2024</strong><br>
-      <span style="font-size:0.85rem; opacity:0.6">Giải Nhất 35Awards 2022</span>
-    </p>
-  </div>
-
-  <div class="gallery-grid reveal d1">
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g1.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Sài Gòn lúc hoàng hôn<br><em>Quận 1, 2024</em></p></div>
-      <span class="g-num">01</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g2.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Góc phố nhỏ<br><em>Bình Thạnh, 2024</em></p></div>
-      <span class="g-num">02</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g3.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Ánh đèn về đêm<br><em>Chợ Lớn, 2023</em></p></div>
-      <span class="g-num">03</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g4.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Mưa chiều<br><em>Quận 3, 2024</em></p></div>
-      <span class="g-num">04</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g5.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Cửa sổ<br><em>Tân Định, 2023</em></p></div>
-      <span class="g-num">05</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g6.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Về nhà<br><em>Bình Dương, 2024</em></p></div>
-      <span class="g-num">06</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g7.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Sài Gòn không ngủ<br><em>Phố đi bộ, 2024</em></p></div>
-      <span class="g-num">07</span>
-    </div>
-    <div class="g-cell">
-      <div class="g-img"><img src="assets/images/g8.jpg" alt=""></div>
-      <div class="g-overlay"><p class="g-overlay-text">Tổ ấm<br><em>Quận 7, 2023</em></p></div>
-      <span class="g-num">08</span>
     </div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════ -->
-<!--  V. INVITATION                           -->
-<!-- ════════════════════════════════════════ -->
-<section id="invite">
-  <span class="invite-tag reveal">Lời Mời</span>
-  <h2 class="invite-title reveal d1">
-    Đặt chỗ<br>cho <span class="em">tổ ấm</span>
-  </h2>
-  <p class="invite-sub reveal d2">Mỗi vé là một ô cửa mở ra — hoàn toàn miễn phí</p>
-
-  <!-- 2-COL LAYOUT -->
-  <div class="invite-layout reveal d2">
-
-    <!-- LEFT: FORM -->
-    <div class="invite-left">
-      <div class="invite-form" id="regForm">
-        <div class="form-field">
-          <label class="form-label" for="f-name">Họ và Tên <span class="req">*</span></label>
-          <input type="text" id="f-name" class="form-input" placeholder="Nguyễn Văn A" autocomplete="name">
-          <span class="form-err" id="e-name"></span>
-        </div>
-        <div class="form-row-2">
-          <div class="form-field">
-            <label class="form-label" for="f-phone">Số Điện Thoại <span class="req">*</span></label>
-            <input type="tel" id="f-phone" class="form-input" placeholder="0901 234 567" autocomplete="tel">
-            <span class="form-err" id="e-phone"></span>
-          </div>
-          <div class="form-field">
-            <label class="form-label" for="f-email">Email <span class="req">*</span></label>
-            <input type="email" id="f-email" class="form-input" placeholder="email@example.com" autocomplete="email">
-            <span class="form-err" id="e-email"></span>
-          </div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Ngày Tham Dự <span class="req">*</span></label>
-          <div class="date-row">
-            <label class="date-opt"><input type="radio" name="date" value="3/4"><span class="date-btn">3.4 · Thứ Sáu</span></label>
-            <label class="date-opt"><input type="radio" name="date" value="4/4"><span class="date-btn">4.4 · Thứ Bảy</span></label>
-            <label class="date-opt"><input type="radio" name="date" value="5/4"><span class="date-btn">5.4 · Chủ Nhật</span></label>
-          </div>
-          <span class="form-err" id="e-date"></span>
-        </div>
-        <p class="form-note">Vé vào cổng miễn phí · Mỗi vé gồm 1 người lớn + 1 trẻ em dưới 1m</p>
-      </div>
-
-      <div class="invite-cta-wrap">
-        <button class="btn-register" id="regBtn" onclick="submitReg(event)">
-          <span>Đăng Ký Ngay</span>
-          <span class="btn-arrow">→</span>
-        </button>
-      </div>
-
-      <!-- SUCCESS -->
-      <div class="success-msg" id="successBox">
-        <span class="success-glyph">✦</span>
-        <h3 class="success-head">ĐĂNG KÝ THÀNH CÔNG</h3>
-        <p class="success-body">
-          Cảm ơn <strong id="s-name"></strong>! Vui lòng kiểm tra email <strong id="s-email"></strong> để nhận mã QR check-in. Hẹn gặp bạn tại Công Viên 23 Tháng 9, ngày <strong id="s-date"></strong>.
-        </p>
-      </div>
+<!-- JOURNEY / DOMES -->
+<section id="journey" style="padding-top:6rem;">
+  <div class="container">
+    <div class="journey-header">
+      <p class="section-label reveal" style="justify-content:center">Storyline</p>
+      <h2 class="section-title reveal reveal-delay-1" style="text-align:center">Hành trình<br><em>5 ô cửa</em></h2>
+      <p class="section-body reveal reveal-delay-2">Mỗi không gian là một lát cắt của đời sống, một nhịp điệu của Sài Gòn, một phần của câu chuyện về Tổ Ấm.</p>
     </div>
+  </div>
 
-    <!-- RIGHT: MAP -->
-    <div class="invite-right">
-      <div class="map-bar">
-        <span class="map-bar-label">
-          <span>⌖</span>
-          Công Viên 23 Tháng 9 · Quận 1 · TP.HCM
-        </span>
-        <a href="https://maps.google.com/?q=Công+Viên+23+Tháng+9,+Quận+1,+TP.HCM"
-           target="_blank" rel="noopener" class="map-dir-link">
-          Chỉ đường ↗
-        </a>
+  <div class="container" style="max-width:1400px">
+    <div class="domes-grid reveal">
+      <!-- Dome 1 -->
+      <div class="dome-card">
+        <div class="dome-card-bg dome-bg-1"><img src="assets/images/g1.jpg" alt=""></div>
+        <div class="dome-accent dome-accent-1"></div>
+        <div class="dome-card-overlay"></div>
+        <div class="dome-card-inner">
+          <div class="dome-number">01</div>
+          <div class="dome-tag">Dome 1 · Check-in</div>
+          <h3 class="dome-name">Một lời chào<br>Muôn vị ấm</h3>
+          <p class="dome-desc">Trải nghiệm "Chạm & Mở" – khám phá những ô cửa Sài Gòn, nhận lời chào từ Văn Phú theo quê hương bạn.</p>
+          <div class="dome-cta">Khám phá</div>
+        </div>
       </div>
 
-      <div class="map-wrap">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6607348888784!2d106.69495917465626!3d10.771530589381528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4002cdb24b%3A0xd8e37b8a68a4af67!2zQ8O0bmcgdmnDqm4gMjMgdGjDoW5nIDks4bqgUGjhuqFtIE5nxakgTGHCtyBUUC4gSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2svn!4v1709550000000!5m2!1svi!2svn"
-          title="Bản đồ Công Viên 23 Tháng 9"
-          allowfullscreen
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-        <div class="map-tint"></div>
+      <!-- Dome 2 -->
+      <div class="dome-card">
+        <div class="dome-card-bg dome-bg-2"><img src="assets/images/g2.jpg" alt=""></div>
+        <div class="dome-accent dome-accent-2"></div>
+        <div class="dome-card-overlay"></div>
+        <div class="dome-card-inner">
+          <div class="dome-number">02</div>
+          <div class="dome-tag">Dome 2 · Triển lãm ảnh</div>
+          <h3 class="dome-name">Muôn sắc<br>Sài Gòn</h3>
+          <p class="dome-desc">"Phố ở trong Phố" – triển lãm ảnh của nhiếp ảnh gia Kmon Nguyễn, in trên giấy lụa với hiệu ứng ánh sáng sống động. AR, VR immersive.</p>
+          <div class="dome-cta">Khám phá</div>
+        </div>
       </div>
 
-      <div class="map-info-strip">
-        <div class="msi-item">
-          <span class="msi-label">Thời Gian</span>
-          <span class="msi-val">3–5 Tháng 4</span>
+      <!-- Dome 3 -->
+      <div class="dome-card">
+        <div class="dome-card-bg dome-bg-3"><img src="assets/images/g7.jpg" alt=""></div>
+        <div class="dome-accent dome-accent-1"></div>
+        <div class="dome-card-overlay"></div>
+        <div class="dome-card-inner">
+          <div class="dome-number">03</div>
+          <div class="dome-tag">Dome 3 · Mapping 360°</div>
+          <h3 class="dome-name">Muôn màu<br>văn hóa</h3>
+          <p class="dome-desc">Không gian mapping 360° – những cánh cửa dẫn vào thế giới văn hóa đậm bản sắc địa phương, nơi Sài Gòn hiện ra với nhiều giọng nói.</p>
+          <div class="dome-cta">Khám phá</div>
         </div>
-        <div class="msi-item">
-          <span class="msi-label">Giờ Mở Cửa</span>
-          <span class="msi-val">9:00 – 21:00</span>
+      </div>
+
+      <!-- Dome 4 -->
+      <div class="dome-card">
+        <div class="dome-card-bg dome-bg-4"><img src="assets/images/g5.jpg" alt=""></div>
+        <div class="dome-accent dome-accent-2"></div>
+        <div class="dome-card-overlay"></div>
+        <div class="dome-card-inner">
+          <div class="dome-number">04</div>
+          <div class="dome-tag">Dome 4 · VIP Lounge</div>
+          <h3 class="dome-name">Muôn vị<br>ước mơ</h3>
+          <p class="dome-desc">Experience Lounge – vẽ ước mơ lên bầu trời qua mapping tương tác, thưởng thức cocktail độc bản giữa không gian nội thất cảm hứng.</p>
+          <div class="dome-cta">Khám phá</div>
         </div>
-        <div class="msi-item">
-          <span class="msi-label">Khu Vực</span>
-          <span class="msi-val">Quận 1 · HCM</span>
-        </div>
-        <div class="msi-item">
-          <span class="msi-label">Vé Vào Cửa</span>
-          <span class="msi-val free">MIỄN PHÍ</span>
+      </div>
+
+      <!-- Dome 5 -->
+      <div class="dome-card">
+        <div class="dome-card-bg dome-bg-5"><img src="assets/images/g8.jpg" alt=""></div>
+        <div class="dome-accent dome-accent-1"></div>
+        <div class="dome-card-overlay"></div>
+        <div class="dome-card-inner">
+          <div class="dome-number">05</div>
+          <div>
+            <div class="dome-tag">Dome 5 · Workshop & Gifts</div>
+            <h3 class="dome-name">Muôn niềm vui nhỏ</h3>
+          </div>
+          <div>
+            <p class="dome-desc">Workshop terrarium, quà tặng cá nhân hóa, talkshow Homentor – nơi hành trình khép lại bằng những điều xanh nhỏ và niềm vui thật.</p>
+            <div class="dome-cta">Khám phá</div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-  </div><!-- end invite-layout -->
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="container">
+    <div class="timeline-header">
+      <div class="timeline-date-badge reveal">
+        <span>Ngày 3 · 4 · 5</span>
+        <span style="color: rgba(245,230,211,0.2)">|</span>
+        <span>Tháng 4 · 2026</span>
+      </div>
+      <p class="section-label reveal" style="justify-content:center">Lịch Trình</p>
+      <h2 class="section-title reveal reveal-delay-1" style="text-align:center">Timeline<br><em>Sự kiện</em></h2>
+    </div>
+
+    <div class="reveal">
+      <table class="timeline-table">
+        <thead>
+          <tr>
+            <th>Thời gian</th>
+            <th>Hoạt động</th>
+            <th>Nội dung chính</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="time-col">09:00 – 09:30</td>
+            <td class="activity-col">Đón khách · Check-in</td>
+            <td class="detail-col">Quét mã QR · Tea break · Nhận thẻ cư dân</td>
+          </tr>
+          <tr>
+            <td class="time-col">09:35 – 09:50</td>
+            <td class="activity-col">Lễ Khai Mạc</td>
+            <td class="detail-col">Phát biểu · Cắt băng khai trương triển lãm</td>
+          </tr>
+          <tr>
+            <td class="time-col">10:00 – 17:00</td>
+            <td class="activity-col">Tham quan 5 Domes</td>
+            <td class="detail-col">Dome 1–5 · Trải nghiệm đa giác quan · Tự do tham quan</td>
+          </tr>
+          <tr>
+            <td class="time-col">09:00 · 11:00<br>15:00 · 17:00</td>
+            <td class="activity-col">VIP Sessions</td>
+            <td class="detail-col">HDV thuyết minh · Street Performance · Workshop · Talkshow Homentor</td>
+          </tr>
+          <tr>
+            <td class="time-col">Cả ngày</td>
+            <td class="activity-col">Trắc nghiệm Standee LED</td>
+            <td class="detail-col">"Ngôi nhà của tôi như thế nào?" – Tìm hiểu phong cách sống của bạn</td>
+          </tr>
+          <tr>
+            <td class="time-col">19:00 – 21:00</td>
+            <td class="activity-col">Đêm Nhạc Acoustic</td>
+            <td class="detail-col">Sân khấu ngoài trời · Band Paradox · Ca sĩ khách mời</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ARTISTS -->
+<section id="artists">
+  <div class="container">
+    <div class="artists-header">
+      <p class="section-label reveal" style="justify-content:center">Nghệ Sĩ Tham Gia</p>
+      <h2 class="section-title reveal reveal-delay-1" style="text-align:center">Những tên tuổi<br><em>đặc biệt</em></h2>
+    </div>
+  </div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 1.5rem;">
+    <div class="artists-row reveal">
+      <div class="artist-card">
+        <div class="artist-bg artist-bg-1"><img src="assets/images/artist1.jpg" alt=""></div>
+        <div class="artist-initial">K</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Nhiếp Ảnh · Dome 2</div>
+          <div class="artist-name">Kmon Nguyễn</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Nhiếp Ảnh Gia</div>
+          <div class="artist-name">Kmon Nguyễn</div>
+          <div class="artist-award">Top 100 Street Photo · 35Awards 2024<br>Giải Nhất 35Awards 2022</div>
+        </div>
+      </div>
+
+      <div class="artist-card">
+        <div class="artist-bg artist-bg-2"><img src="assets/images/artist2.jpg" alt=""></div>
+        <div class="artist-initial">P</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Họa Sĩ · Dome 3</div>
+          <div class="artist-name">Phan Tú Trân</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Họa Sĩ</div>
+          <div class="artist-name">Phan Tú Trân</div>
+          <div class="artist-award">Nghệ thuật đương đại Việt Nam,<br>tác phẩm lấy cảm hứng văn hóa dân gian</div>
+        </div>
+      </div>
+
+      <div class="artist-card">
+        <div class="artist-bg artist-bg-3"><img src="assets/images/artist3.jpg" alt=""></div>
+        <div class="artist-initial">V</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Họa Sĩ · Dome 4</div>
+          <div class="artist-name">Việt Mỹ</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Họa Sĩ "Triệu Views"</div>
+          <div class="artist-name">Việt Mỹ</div>
+          <div class="artist-award">Vẽ chân dung bằng bút bi,<br>hàng triệu lượt theo dõi</div>
+        </div>
+      </div>
+
+      <div class="artist-card">
+        <div class="artist-bg artist-bg-4"><img src="assets/images/artist4.jpg" alt=""></div>
+        <div class="artist-initial">C</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Visual Art · Dome 3&4</div>
+          <div class="artist-name">Cao Hoàng Long</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Nghệ Sĩ Thị Giác</div>
+          <div class="artist-name">Cao Hoàng Long</div>
+          <div class="artist-award">Chuyên gia mapping và<br>nghệ thuật ánh sáng tương tác</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Music row -->
+    <div class="artists-row reveal reveal-delay-2" style="margin-top:2px;grid-template-columns:repeat(3,1fr)">
+      <div class="artist-card" style="aspect-ratio:4/3">
+        <div class="artist-bg" style="background:linear-gradient(160deg,#1A1830 0%,#0A0810 100%)"><img src="assets/images/artist5.jpg" alt=""></div>
+        <div class="artist-initial" style="font-size:5rem">P</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Âm nhạc · Đêm nhạc</div>
+          <div class="artist-name">Phan Mạnh Quỳnh</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Ca Sĩ</div>
+          <div class="artist-name">Phan Mạnh Quỳnh</div>
+          <div class="artist-award">Giọng ca acoustic trữ tình,<br>"Vợ Người Ta" – hàng triệu streams</div>
+        </div>
+      </div>
+
+      <div class="artist-card" style="aspect-ratio:4/3">
+        <div class="artist-bg" style="background:linear-gradient(160deg,#2A1020 0%,#0A0408 100%)"><img src="assets/images/artist6.jpg" alt=""></div>
+        <div class="artist-initial" style="font-size:5rem">V</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Âm nhạc · Đêm nhạc</div>
+          <div class="artist-name">Vũ Cát Tường</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Ca Sĩ · Nhạc Sĩ</div>
+          <div class="artist-name">Vũ Cát Tường</div>
+          <div class="artist-award">Giọng ca indie cá tính,<br>nghệ sĩ đa tài của âm nhạc Việt</div>
+        </div>
+      </div>
+
+      <div class="artist-card" style="aspect-ratio:4/3">
+        <div class="artist-bg" style="background:linear-gradient(160deg,#1A2A10 0%,#080A04 100%)"><img src="assets/images/artist7.jpg" alt=""></div>
+        <div class="artist-initial" style="font-size:5rem">H</div>
+        <div class="artist-name-visible">
+          <div class="artist-role">Âm nhạc · Đêm nhạc</div>
+          <div class="artist-name">Hoàng Dũng</div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-role">Ca Sĩ · Nhạc Sĩ</div>
+          <div class="artist-name">Hoàng Dũng</div>
+          <div class="artist-award">Nghệ sĩ indie, R&B Việt Nam,<br>chất giọng ấm và đầy cảm xúc</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="container">
+    <div class="register-inner">
+      <p class="section-label reveal" style="justify-content:center">Tham Dự</p>
+      <h2 class="register-title reveal reveal-delay-1">
+        Đặt chỗ cho<br><em>tổ ấm của bạn</em>
+      </h2>
+      <p class="register-body reveal reveal-delay-2">
+        Mỗi vé là một ô cửa mở ra. Điền thông tin bên dưới để nhận mã QR check-in tại sự kiện — hoàn toàn miễn phí.
+      </p>
+
+      <!-- FORM + QR LAYOUT -->
+      <div class="register-layout reveal reveal-delay-3">
+
+        <!-- FORM CARD -->
+        <div class="reg-form-card">
+          <div class="reg-form-header">
+            <span class="reg-form-tag">Đăng Ký Vé Tham Dự</span>
+            <p class="reg-form-note">Mỗi vé gồm 1 người lớn + 1 trẻ em dưới 1m</p>
+          </div>
+
+          <div id="regForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="fullname">Họ và Tên <span class="req">*</span></label>
+                <div class="form-input-wrap">
+                  <input type="text" id="fullname" class="form-input" placeholder="Nguyễn Văn A" autocomplete="name">
+                  <span class="form-input-line"></span>
+                </div>
+                <span class="form-error" id="err-fullname"></span>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label class="form-label" for="phone">Số Điện Thoại <span class="req">*</span></label>
+                <div class="form-input-wrap">
+                  <input type="tel" id="phone" class="form-input" placeholder="0901 234 567" autocomplete="tel">
+                  <span class="form-input-line"></span>
+                </div>
+                <span class="form-error" id="err-phone"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">Email <span class="req">*</span></label>
+                <div class="form-input-wrap">
+                  <input type="email" id="email" class="form-input" placeholder="email@example.com" autocomplete="email">
+                  <span class="form-input-line"></span>
+                </div>
+                <span class="form-error" id="err-email"></span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Ngày tham dự <span class="req">*</span></label>
+                <div class="form-date-group">
+                  <label class="date-option">
+                    <input type="radio" name="date" value="03/04/2026">
+                    <span class="date-btn">3.4 · Thứ Sáu</span>
+                  </label>
+                  <label class="date-option">
+                    <input type="radio" name="date" value="04/04/2026">
+                    <span class="date-btn">4.4 · Thứ Bảy</span>
+                  </label>
+                  <label class="date-option">
+                    <input type="radio" name="date" value="05/04/2026">
+                    <span class="date-btn">5.4 · Chủ Nhật</span>
+                  </label>
+                </div>
+                <span class="form-error" id="err-date"></span>
+              </div>
+            </div>
+
+            <button class="reg-submit-btn" id="submitBtn" onclick="handleSubmit(event)">
+              <span class="submit-text">Đăng Ký Ngay</span>
+              <span class="submit-arrow">→</span>
+              <span class="submit-loading" style="display:none">
+                <span class="dot-spin"></span><span class="dot-spin"></span><span class="dot-spin"></span>
+              </span>
+            </button>
+
+            <p class="form-disclaimer">
+              Bằng cách đăng ký, bạn đồng ý nhận thông tin từ VanPhu về sự kiện và các chương trình liên quan.
+            </p>
+          </div>
+
+          <!-- SUCCESS STATE -->
+          <div id="regSuccess" style="display:none">
+            <div class="success-state">
+              <div class="success-icon">✦</div>
+              <h3 class="success-title">Đăng Ký Thành Công!</h3>
+              <p class="success-body">Cảm ơn <strong id="successName"></strong>! Vé của bạn đã được ghi nhận. Vui lòng kiểm tra email <strong id="successEmail"></strong> để nhận mã QR check-in.</p>
+              <div class="success-details">
+                <div class="success-detail-item">
+                  <span class="sd-label">Ngày tham dự</span>
+                  <span class="sd-val" id="successDate"></span>
+                </div>
+                <div class="success-detail-item">
+                  <span class="sd-label">Địa điểm</span>
+                  <span class="sd-val">Công Viên 23 Tháng 9, TP.HCM</span>
+                </div>
+                <div class="success-detail-item">
+                  <span class="sd-label">Giờ mở cửa</span>
+                  <span class="sd-val">9:00 – 21:00</span>
+                </div>
+              </div>
+              <button class="reg-submit-btn" style="margin-top:2rem;width:auto;padding:0.9rem 2rem;" onclick="resetForm()">
+                <span class="submit-text">Đăng Ký Thêm</span>
+                <span class="submit-arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAP SIDE -->
+        <div class="reg-qr-side">
+          <div class="map-container">
+            <div class="map-label-top">
+              <span class="map-pin-icon">⌖</span>
+              <span>Công Viên 23 Tháng 9, TP.HCM</span>
+            </div>
+            <div class="map-frame-wrap">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6607348888784!2d106.69495917465626!3d10.771530589381528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4002cdb24b%3A0xd8e37b8a68a4af67!2zQ8O0bmcgdmnDqm4gMjMgdGjDoW5nIDks4bqgUGjhuqFtIE5nxakgTGHCtyBUUC4gSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2svn!4v1709550000000!5m2!1svi!2svn"
+                width="100%"
+                height="100%"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Bản đồ Công Viên 23 Tháng 9">
+              </iframe>
+              <div class="map-overlay-tint"></div>
+            </div>
+            <a
+              href="https://maps.google.com/?q=Công+Viên+23+Tháng+9,+Phạm+Ngũ+Lão,+Quận+1,+TP.HCM"
+              target="_blank"
+              rel="noopener"
+              class="map-directions-btn">
+              <span>Chỉ đường</span>
+              <span class="map-arrow">↗</span>
+            </a>
+          </div>
+
+          <div class="reg-event-info">
+            <div class="rei-item">
+              <span class="rei-icon">◈</span>
+              <div>
+                <span class="rei-label">Địa điểm</span>
+                <span class="rei-val">Tòa Exhibition · Công Viên 23/9</span>
+              </div>
+            </div>
+            <div class="rei-item">
+              <span class="rei-icon">◈</span>
+              <div>
+                <span class="rei-label">Thời gian</span>
+                <span class="rei-val">3–5 Tháng 4 · 2026</span>
+              </div>
+            </div>
+            <div class="rei-item">
+              <span class="rei-icon">◈</span>
+              <div>
+                <span class="rei-label">Giờ mở cửa</span>
+                <span class="rei-val">9:00 – 21:00 hàng ngày</span>
+              </div>
+            </div>
+            <div class="rei-item">
+              <span class="rei-icon">◈</span>
+              <div>
+                <span class="rei-label">Vé vào cửa</span>
+                <span class="rei-val" style="color:var(--amber)">Miễn Phí</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="container" style="width: 100%;">
-    <div style="margin-bottom: 4rem;">
-      <div class="foot-brand" style="margin-bottom: 1.5rem; opacity: 1;">
-        <img src="assets/images/VPI_Logo.png" height="40px" alt="VANPHU Logo">
+  <div class="container">
+    <div class="mb-10">
+      <div class="brand-name mb-6">
+        <img src="assets/images/VPI_Logo.png" style="height: 40px;" alt="VANPHU Logo">
       </div>
-      <p style="font-family: var(--serif); font-size: 1rem; font-style: italic; color: var(--sand-dim); max-width: 800px; line-height: 1.7;">
-        Thành lập từ năm 2003, Công ty Cổ phần Phát triển Bất động sản Văn Phú không chỉ là nhà đầu tư mà còn thể hiện vai trò trong toàn bộ quá trình thực hiện dự án: từ nghiên cứu, thiết kế đến vận hành. Với tầm nhìn Vị nhân sinh, Văn Phú từng bước khẳng định vị thế trong lĩnh vực bất động sản tại Việt Nam.
+      <p class="section-body text-sm max-w-5xl opacity-80" style="font-style: normal;">
+        Thành lập từ năm 2003, Công ty Cổ phần Phát triển Bất động sản Văn Phú không chỉ là nhà đầu tư mà còn thể hiện vai trò trong toàn bộ quá trình thực hiện dự án bất động sản: từ khâu nghiên cứu, phát triển, thiết kế, quản lý xây dựng thi công, vận hành và khai thác sau đầu tư. Doanh nghiệp nhanh chóng trở thành một trong những đối tác đáng tin cậy và uy tín trong ngành xây dựng cũng như phát triển dự án. Với tầm nhìn Vị nhân sinh, Văn Phú từng bước khẳng định vị thế trong lĩnh vực bất động sản tại Việt Nam.
       </p>
     </div>
 
-    <hr style="border: none; border-top: 1px solid rgba(227,124,77,0.1); margin-bottom: 3rem;">
+    <hr style="border-color: rgba(227,124,77,0.2); margin-bottom: 3rem;">
 
-    <div class="footer-grid-main">
-      <div class="foot-col">
-        <h4 class="foot-h4">Liên hệ</h4>
-        <ul class="foot-ul">
-          <li>Địa chỉ: 104 phố Thái Thịnh, Phường Trung Liệt, Quận Đống Đa, Hà Nội, Việt Nam</li>
-          <li>Hotline: (+84) 24 6258 3535</li>
-          <li>Fax: (+84) 24 6258 3636</li>
-          <li>Email: info@vanphu.vn</li>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Liên hệ</h4>
+        <ul>
+          <li><span>Địa chỉ: 104 phố Thái Thịnh, Phường Trung Liệt, Quận Đống Đa, Hà Nội, Việt Nam</span></li>
+          <li><span>Hotline: (+84) 24 6258 3535</span></li>
+          <li><span>Fax: (+84) 24 6258 3636</span></li>
+          <li><span>Email: info@vanphu.vn</span></li>
         </ul>
       </div>
 
-      <div class="foot-col">
-        <h4 class="foot-h4">Khám phá</h4>
-        <ul class="foot-ul">
-          <li><a href="#philosophy">Thông tin Văn Phú</a></li>
-          <li><a href="#acts">Dự án</a></li>
-          <li><a href="#">Quan hệ cổ đông</a></li>
-          <li><a href="#invite">Liên hệ</a></li>
+      <div class="footer-col">
+        <h4>Khám phá</h4>
+        <ul>
+          <li><a href="#">Thông tin Văn Phú</a></li>
+          <li><a href="#">Dự án</a></li>
+          <li><a href="#">Tin tức</a></li>
+          <li><a href="#">Liên hệ</a></li>
         </ul>
       </div>
 
-      <div class="foot-col">
-        <h4 class="foot-h4">Kết nối</h4>
-        <ul class="foot-ul social-links">
-          <li><a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a></li>
-          <li><a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a></li>
-          <li><a href="#"><i class="fa-brands fa-youtube"></i> Youtube</a></li>
+      <div class="footer-col">
+        <h4>Kết nối với chúng tôi</h4>
+        <ul>
+          <li>
+            <a href="#" class="flex items-center gap-3">
+              <i class="fa-brands fa-facebook-f w-5"></i>
+              <span>Facebook</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3">
+              <i class="fa-brands fa-linkedin-in w-5"></i>
+              <span>LinkedIn</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3">
+              <i class="fa-brands fa-youtube w-5"></i>
+              <span>Youtube</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
 
-    <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(245,230,211,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <p class="foot-copy">© Copyright 2025 by Van Phu. All rights reserved.</p>
+    <div class="footer-bottom">
+      <p>© Copyright 2025 by Van Phu. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
 <script>
-  // ── CURSOR ──────────────────────────────────────────
-  const cur = document.getElementById('cur');
-  const ring = document.getElementById('ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  (function animCursor() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    cur.style.left  = mx + 'px';
-    cur.style.top   = my + 'px';
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(animCursor);
-  })();
-  document.querySelectorAll('a, button, .g-cell, .date-opt').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cur.style.transform = 'translate(-50%,-50%) scale(2.5)';
-      ring.style.transform = 'translate(-50%,-50%) scale(0.5)';
-      ring.style.opacity = '0.4';
+// WINDOWS GRID - Hero
+(function() {
+  const grid = document.getElementById('windowsGrid');
+  const types = ['', 'lit', 'lit-warm', 'lit-cool', '', 'lit', ''];
+  for (let i = 0; i < 35; i++) {
+    const cell = document.createElement('div');
+    const initType = types[Math.floor(Math.random() * types.length)];
+    cell.className = 'window-cell ' + initType;
+    // Inject colour layers
+    ['wl wl-warm','wl wl-hot','wl wl-cool'].forEach(cls => {
+      const l = document.createElement('span');
+      l.className = cls;
+      cell.appendChild(l);
     });
-    el.addEventListener('mouseleave', () => {
-      cur.style.transform = 'translate(-50%,-50%) scale(1)';
-      ring.style.transform = 'translate(-50%,-50%) scale(1)';
-      ring.style.opacity = '1';
-    });
-  });
+    grid.appendChild(cell);
+  }
 
-  // ── WINDOWS GRID ────────────────────────────────────
-  (function() {
-    const grid = document.getElementById('winGrid');
-    const states = ['', 'lit-a', 'lit-b', 'lit-c', '', 'lit-a', '', 'lit-b', ''];
-    for (let i = 0; i < 48; i++) {
-      const w = document.createElement('div');
-      w.className = 'win ' + states[Math.floor(Math.random() * states.length)];
-      ['wl wl-a', 'wl wl-b', 'wl wl-c'].forEach(cls => {
-        const l = document.createElement('span');
-        l.className = cls;
-        w.appendChild(l);
-      });
-      grid.appendChild(w);
+  // Stagger smooth toggling — change one cell every ~600ms with long fade
+  const cells = grid.querySelectorAll('.window-cell');
+  const stateList = ['', 'lit', 'lit-warm', 'lit-cool', '', '', 'lit'];
+  function toggleNext() {
+    const idx = Math.floor(Math.random() * cells.length);
+    const next = stateList[Math.floor(Math.random() * stateList.length)];
+    cells[idx].className = 'window-cell ' + next;
+  }
+  setInterval(toggleNext, 600);
+})();
+
+// NAVBAR scroll
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
     }
-    const wins = grid.querySelectorAll('.win');
-    setInterval(() => {
-      const idx = Math.floor(Math.random() * wins.length);
-      wins[idx].className = 'win ' + states[Math.floor(Math.random() * states.length)];
-    }, 700);
-  })();
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
 
-  // ── NAVBAR ──────────────────────────────────────────
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // ── SCROLL REVEAL ───────────────────────────────────
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // ── SMOOTH ANCHOR ───────────────────────────────────
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      const t = document.querySelector(a.getAttribute('href'));
-      if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
+// CONCEPT WINDOWS - animate smoothly
+(function() {
+  const panes = document.querySelectorAll('.cw-pane');
+  // Inject colour layers into each pane
+  panes.forEach(p => {
+    ['wl wl-warm','wl wl-blue','wl wl-hot'].forEach(cls => {
+      const l = document.createElement('span');
+      l.className = cls;
+      p.appendChild(l);
     });
   });
-
-  // ── FORM SUBMIT ─────────────────────────────────────
-  function validate(id, errId, fn, msg) {
-    const el = document.getElementById(id);
-    const ok = fn(el.value.trim());
-    document.getElementById(errId).textContent = ok ? '' : msg;
-    el.classList.toggle('err', !ok);
-    return ok;
+  const states = ['', 'on', 'on-blue', 'on-warm', '', 'on', 'on-warm'];
+  function animatePanes() {
+    const idx = Math.floor(Math.random() * panes.length);
+    const isSpan2 = panes[idx].classList.contains('span2');
+    const next = states[Math.floor(Math.random() * states.length)];
+    panes[idx].className = 'cw-pane ' + (isSpan2 ? 'span2 ' : '') + next;
   }
+  setInterval(animatePanes, 900);
+})();
 
-  function submitReg(e) {
+// SMOOTH scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
     e.preventDefault();
-    const n  = validate('f-name',  'e-name',  v => v.length >= 2, 'Vui lòng nhập họ và tên.');
-    const p  = validate('f-phone', 'e-phone', v => /^(\+84|0)[3-9]\d{8}$/.test(v.replace(/\s/g,'')), 'Số điện thoại không hợp lệ.');
-    const em = validate('f-email', 'e-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Email không hợp lệ.');
-    const dateVal = [...document.querySelectorAll('input[name="date"]')].find(r => r.checked)?.value;
-    const dateEr  = document.getElementById('e-date');
-    dateEr.textContent = dateVal ? '' : 'Vui lòng chọn ngày tham dự.';
-    if (!n || !p || !em || !dateVal) return;
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      const offset = 80;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
 
-    const btn = document.getElementById('regBtn');
-    btn.style.opacity = '0.5';
-    btn.style.pointerEvents = 'none';
+// ===== FORM VALIDATION & SUBMIT =====
+function validateField(id, errId, validator, msg) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(errId);
+  if (!validator(el.value.trim())) {
+    el.classList.add('error');
+    err.textContent = msg;
+    return false;
+  }
+  el.classList.remove('error');
+  err.textContent = '';
+  return true;
+}
 
-    setTimeout(() => {
-      document.getElementById('s-name').textContent  = document.getElementById('f-name').value.trim();
-      document.getElementById('s-email').textContent = document.getElementById('f-email').value.trim();
-      document.getElementById('s-date').textContent  = dateVal + '/4/2026';
-      document.getElementById('regForm').style.display  = 'none';
-      document.getElementById('regBtn').style.display   = 'none';
-      document.getElementById('successBox').classList.add('show');
-    }, 1400);
+function getCheckedDate() {
+  const radios = document.querySelectorAll('input[name="date"]');
+  for (const r of radios) { if (r.checked) return r.value; }
+  return '';
+}
+
+document.querySelectorAll('.form-input').forEach(input => {
+  input.addEventListener('input', () => {
+    input.classList.remove('error');
+    const errId = 'err-' + input.id;
+    const errEl = document.getElementById(errId);
+    if (errEl) errEl.textContent = '';
+  });
+});
+
+function handleSubmit(e) {
+  e.preventDefault();
+  let valid = true;
+
+  valid = validateField('fullname', 'err-fullname',
+    v => v.length >= 2, 'Vui lòng nhập họ và tên đầy đủ.') && valid;
+
+  valid = validateField('phone', 'err-phone',
+    v => /^(\+84|0)[3-9]\d{8}$/.test(v.replace(/\s/g,'')), 'Số điện thoại không hợp lệ (VD: 0901 234 567).') && valid;
+
+  valid = validateField('email', 'err-email',
+    v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Địa chỉ email không hợp lệ.') && valid;
+
+  const dateVal = getCheckedDate();
+  const dateErr = document.getElementById('err-date');
+  if (!dateVal) {
+    dateErr.textContent = 'Vui lòng chọn ngày tham dự.';
+    valid = false;
+  } else {
+    dateErr.textContent = '';
   }
 
-  // Clear errors on input
-  document.querySelectorAll('.form-input').forEach(inp => {
-    inp.addEventListener('input', () => {
-      inp.classList.remove('err');
-      const eId = 'e-' + inp.id.split('-')[1];
-      const e = document.getElementById(eId);
-      if (e) e.textContent = '';
-    });
-  });
+  if (!valid) return;
+
+  // Simulate submission
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.querySelector('.submit-text').style.display = 'none';
+  btn.querySelector('.submit-arrow').style.display = 'none';
+  btn.querySelector('.submit-loading').style.display = 'flex';
+
+  setTimeout(() => {
+    const name = document.getElementById('fullname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    document.getElementById('successName').textContent = name;
+    document.getElementById('successEmail').textContent = email;
+    document.getElementById('successDate').textContent = dateVal;
+    document.getElementById('regForm').style.display = 'none';
+    document.getElementById('regSuccess').style.display = 'block';
+  }, 1800);
+}
+
+function resetForm() {
+  document.getElementById('regForm').style.display = 'block';
+  document.getElementById('regSuccess').style.display = 'none';
+  document.getElementById('fullname').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('email').value = '';
+  document.querySelectorAll('input[name="date"]').forEach(r => r.checked = false);
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = false;
+  btn.querySelector('.submit-text').style.display = 'inline';
+  btn.querySelector('.submit-arrow').style.display = 'inline';
+  btn.querySelector('.submit-loading').style.display = 'none';
+}
 </script>
 </body>
 </html>
