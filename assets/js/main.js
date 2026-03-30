@@ -173,8 +173,10 @@ async function handleSubmit() {
 
     try {
         const res = await apiPost('/guest/update-extra', {
-            id:          guestId,
-            secret_code: guestSecretCode,
+            id:            guestId,
+            secret_code:   guestSecretCode,
+            photo_booth:   true,
+            reminder_sent: true,
             survey: {
                 rating:   5,
                 feedback: feedback,
