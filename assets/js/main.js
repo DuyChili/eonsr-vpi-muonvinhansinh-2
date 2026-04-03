@@ -205,9 +205,12 @@ async function handleSubmit() {
     const selected = step3.querySelector('.choice-item.selected');
     if (!selected) { document.getElementById('surveyErr3').classList.add('show'); return; }
 
-    // Lấy câu trả lời 2 bước
-    const step2Answer = document.getElementById('step2').querySelector('.choice-item.selected')?.textContent.trim() || '';
-    const step3Answer = selected.textContent.trim();
+    // SỬA LỖI 1: Xóa sạch khoảng trắng thừa ở giữa và 2 đầu để map chuẩn xác 100%
+    const rawStep2 = document.getElementById('step2').querySelector('.choice-item.selected')?.textContent || '';
+    const step2Answer = rawStep2.replace(/\s+/g, ' ').trim();
+    
+    const rawStep3 = selected.textContent || '';
+    const step3Answer = rawStep3.replace(/\s+/g, ' ').trim();
 
     const step2Data  = STEP2_MAP[step2Answer] || { value: step2Answer, url: null };
     const source     = step2Data.value;
@@ -231,8 +234,6 @@ async function handleSubmit() {
             },
         });
 
-        // Dù API ok hay lỗi (không có id/secret_code) → vẫn cho qua step 4
-        // Chỉ log lỗi để debug nếu cần
         if (!res.ok) console.warn('update-extra:', res.data?.message);
 
         // Chuyển sang step 4
@@ -243,15 +244,21 @@ async function handleSubmit() {
         step4.classList.remove('hidden-right', 'hidden-left');
         step4.classList.add('active');
 
-        // Gắn URL vào nút "Khám phá ngay" — user tự nhấn mới chuyển
+        // SỬA LỖI 2 & 3: Xử lý lại nút "Khám phá ngay"
         const exploreBtn = document.getElementById('exploreBtn');
         if (exploreBtn) {
-            exploreBtn.href = redirectUrl || '#';
-            // Ngăn closePopup, chỉ mở URL
-            exploreBtn.onclick = function(e) {
-                e.stopPropagation();
-                if (redirectUrl) window.open(redirectUrl, '_blank');
-            };
+            if (redirectUrl) {
+                // Có URL -> Gán href bình thường, để thẻ <a> tự làm nhiệm vụ mở tab (nhờ target="_blank")
+                exploreBtn.href = redirectUrl;
+                exploreBtn.onclick = null; // Bỏ onclick để không bị lỗi mở 2 tab
+            } else {
+                // Không có URL -> Xóa href và chặn hành vi nhảy trang/mở tab ẩn
+                exploreBtn.href = "javascript:void(0);";
+                exploreBtn.onclick = function(e) {
+                    e.preventDefault(); 
+                    alert("Chưa có đường dẫn phù hợp cho lựa chọn này.");
+                };
+            }
         }
 
     } catch (err) {
