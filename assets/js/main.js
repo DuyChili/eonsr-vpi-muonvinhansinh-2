@@ -243,6 +243,17 @@ async function handleSubmit() {
         step4.classList.remove('hidden-right', 'hidden-left');
         step4.classList.add('active');
 
+        // Gắn URL vào nút "Khám phá ngay" — user tự nhấn mới chuyển
+        const exploreBtn = document.getElementById('exploreBtn');
+        if (exploreBtn) {
+            exploreBtn.href = redirectUrl || '#';
+            // Ngăn closePopup, chỉ mở URL
+            exploreBtn.onclick = function(e) {
+                e.stopPropagation();
+                if (redirectUrl) window.open(redirectUrl, '_blank');
+            };
+        }
+
     } catch (err) {
         console.warn('update-extra error:', err);
         // Vẫn cho qua step 4
