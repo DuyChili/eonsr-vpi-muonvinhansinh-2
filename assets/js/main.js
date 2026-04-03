@@ -28,19 +28,28 @@ const guestEmail      = urlParams.get('email')       || '';
 const guestId         = urlParams.get('id')          || '';
 const guestSecretCode = urlParams.get('secret_code') || '';
 
-// Map câu trả lời survey → giá trị gửi lên API
-// Step 2: hành trình sở hữu nhà → dùng làm "source"
+// Map câu trả lời survey → giá trị gửi lên API + URL redirect
+// Step 2: hành trình sở hữu nhà → question2 + redirect URL
 const STEP2_MAP = {
-    'Tôi đang tìm hiểu để mua căn nhà đầu tiên': 'Mua nhà lần đầu',
-    'Tôi đã có nhà nhưng muốn nâng cấp tổ ấm':  'Nâng cấp tổ ấm',
-    'Tôi đang tìm kiếm cơ hội đầu tư bất động sản': 'Đầu tư BĐS',
+    'Tôi đang tìm hiểu để mua căn nhà đầu tiên': {
+        value: 'Mua nhà lần đầu',
+        url:   'https://livingconnection.vanphu.vn/mua-nha-wiki/',
+    },
+    'Tôi đã có nhà nhưng muốn nâng cấp tổ ấm': {
+        value: 'Nâng cấp tổ ấm',
+        url:   'https://livingconnection.vanphu.vn/nha-dep/',
+    },
+    'Tôi đang tìm kiếm cơ hội đầu tư bất động sản': {
+        value: 'Đầu tư BĐS',
+        url:   'https://livingconnection.vanphu.vn/thi-truong-bat-dong-san/',
+    },
 };
-// Step 3: điều quan tâm → dùng làm "feedback"
+// Step 3: điều quan tâm → question1
 const STEP3_MAP = {
-    'Vị trí thuận lợi':                          'Vị trí thuận lợi',
-    'Mức giá phù hợp với tài chính':              'Mức giá phù hợp',
-    'Tiện ích và môi trường xung quanh':          'Tiện ích & môi trường',
-    'Pháp lý và uy tín của chủ đầu tư':           'Pháp lý & uy tín',
+    'Vị trí thuận lợi':                     'Vị trí thuận lợi',
+    'Mức giá phù hợp với tài chính':         'Mức giá phù hợp',
+    'Tiện ích và môi trường xung quanh':     'Tiện ích & môi trường',
+    'Pháp lý và uy tín của chủ đầu tư':      'Pháp lý & uy tín',
 };
 
 // ============================================================
@@ -107,9 +116,9 @@ function setError(f, i)   { document.getElementById(f).classList.add('has-error'
 function clearError(f, i) { document.getElementById(f).classList.remove('has-error'); document.getElementById(i).classList.remove('error'); }
 
 // ============================================================
-// STEP 1 → STEP 2
+// STEP 1 → STEP 2 (có check email tồn tại)
 // ============================================================
-function goStep2() {
+async function goStep2() {
     const name  = document.getElementById('inputName').value.trim();
     const email = document.getElementById('inputEmail').value.trim();
     let ok = true;
@@ -117,11 +126,48 @@ function goStep2() {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('fieldEmail', 'inputEmail'); ok = false; } else clearError('fieldEmail', 'inputEmail');
     if (!ok) return;
 
-    document.getElementById('step1').classList.remove('active');
-    document.getElementById('step1').classList.add('hidden-left');
-    document.getElementById('step2').classList.remove('hidden-right', 'hidden-left');
-    document.getElementById('step2').classList.add('active');
+    // Check email tồn tại trong hệ thống
+    const btn = document.querySelector('#step1 .btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Đang kiểm tra…';
+
+    try {
+        const res = await apiPost('/guest/send-otp', {
+            full_name: name,
+            email: email,
+        });
+
+        // Nếu email không tồn tại trong hệ thống → backend trả lỗi (không phải 429)
+        if (!res.ok && res.status !== 429) {
+            // Email không tồn tại → quay lại step 1, highlight ô email
+            setEmailNotFoundError();
+            return;
+        }
+
+        // Email hợp lệ (tồn tại hoặc vừa gửi OTP) → qua step 2
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step1').classList.add('hidden-left');
+        document.getElementById('step2').classList.remove('hidden-right', 'hidden-left');
+        document.getElementById('step2').classList.add('active');
+
+    } catch {
+        setEmailNotFoundError('Lỗi kết nối. Vui lòng thử lại.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Tiếp tục';
+    }
 }
+
+function setEmailNotFoundError(msg) {
+    const field = document.getElementById('fieldEmail');
+    const input = document.getElementById('inputEmail');
+    const errEl = field.querySelector('.err-msg');
+
+    field.classList.add('has-error');
+    input.classList.add('error');
+    if (errEl) errEl.textContent = msg || 'Email này chưa đăng ký tham dự sự kiện.';
+}
+
 
 // ============================================================
 // CHỌN ĐÁP ÁN
@@ -163,8 +209,10 @@ async function handleSubmit() {
     const step2Answer = document.getElementById('step2').querySelector('.choice-item.selected')?.textContent.trim() || '';
     const step3Answer = selected.textContent.trim();
 
-    const source   = STEP2_MAP[step2Answer] || step2Answer;
-    const feedback = STEP3_MAP[step3Answer] || step3Answer;
+    const step2Data  = STEP2_MAP[step2Answer] || { value: step2Answer, url: null };
+    const source     = step2Data.value;
+    const redirectUrl = step2Data.url;
+    const feedback   = STEP3_MAP[step3Answer] || step3Answer;
 
     // Disable nút tránh double-submit
     const btn = step3.querySelector('.btn-submit');
@@ -178,30 +226,35 @@ async function handleSubmit() {
             photo_booth:   true,
             reminder_sent: true,
             survey: {
-                rating:   5,
-                feedback: feedback,
-                source:   source,
+                question1: feedback,
+                question2: source,
             },
         });
 
-        if (!res.ok) {
-            console.warn('Update survey failed:', res.data?.message);
-            // Vẫn cho qua step 4 dù API lỗi, không block UX
-        }
+        // Dù API ok hay lỗi (không có id/secret_code) → vẫn cho qua step 4
+        // Chỉ log lỗi để debug nếu cần
+        if (!res.ok) console.warn('update-extra:', res.data?.message);
+
+        // Chuyển sang step 4
+        step3.classList.remove('active');
+        step3.classList.add('hidden-left');
+
+        const step4 = document.getElementById('step4');
+        step4.classList.remove('hidden-right', 'hidden-left');
+        step4.classList.add('active');
+
     } catch (err) {
-        console.warn('Update survey error:', err);
+        console.warn('update-extra error:', err);
+        // Vẫn cho qua step 4
+        step3.classList.remove('active');
+        step3.classList.add('hidden-left');
+        const step4 = document.getElementById('step4');
+        step4.classList.remove('hidden-right', 'hidden-left');
+        step4.classList.add('active');
     } finally {
         btn.disabled = false;
         btn.textContent = 'Hoàn thành';
     }
-
-    // Chuyển sang step 4 (success)
-    step3.classList.remove('active');
-    step3.classList.add('hidden-left');
-
-    const step4 = document.getElementById('step4');
-    step4.classList.remove('hidden-right', 'hidden-left');
-    step4.classList.add('active');
 }
 
 // ============================================================
