@@ -229,8 +229,8 @@ async function handleSubmit() {
             photo_booth:   true,
             reminder_sent: true,
             survey: {
-                question1: feedback,
-                question2: source,
+                question1: source,
+                question2: feedback,
             },
         });
 
